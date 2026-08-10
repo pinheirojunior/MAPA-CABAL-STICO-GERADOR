@@ -1,0 +1,6 @@
+{
+  "name": "Mapa Cabalístico Personalizado",
+  "description": "Sistema para cálculo de números cabalísticos, interpretação e emissão do mapa em PDF de qualidade editorial.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

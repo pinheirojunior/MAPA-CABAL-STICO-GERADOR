@@ -1,0 +1,363 @@
+{
+  "id": "MAP-JRL46N",
+  "createdAt": "2026-08-10T05:57:12.349Z",
+  "engineData": {
+    "inputs": {
+      "fullName": "Carlos Eduardo Santos",
+      "birthDate": "22/11/1990",
+      "normalizedName": "CARLOSEDUARDOSANTOS",
+      "day": 22,
+      "month": 11,
+      "year": 1990
+    },
+    "indicators": {
+      "motivacao": 11,
+      "impressao": 6,
+      "expressao": 8,
+      "destino": 7,
+      "missao": 6
+    },
+    "nameAnalysis": {
+      "distribution": {
+        "occurrences": {
+          "1": 6,
+          "2": 1,
+          "3": 3,
+          "4": 2,
+          "5": 2,
+          "6": 3,
+          "7": 0,
+          "8": 0,
+          "9": 2
+        },
+        "repetitions": [
+          1,
+          3,
+          6
+        ],
+        "absences": [
+          7,
+          8
+        ],
+        "predominances": [
+          1
+        ]
+      },
+      "lifeTriangle": {
+        "rows": [
+          {
+            "level": 1,
+            "numbers": [
+              3,
+              1,
+              9,
+              3,
+              6,
+              1,
+              5,
+              4,
+              3,
+              1,
+              9,
+              4,
+              6,
+              1,
+              1
+            ]
+          },
+          {
+            "level": 2,
+            "numbers": [
+              4,
+              1,
+              3,
+              9,
+              7,
+              6,
+              9,
+              7,
+              4,
+              1,
+              4,
+              1,
+              7,
+              2
+            ]
+          },
+          {
+            "level": 3,
+            "numbers": [
+              5,
+              4,
+              3,
+              7,
+              4,
+              6,
+              7,
+              2,
+              5,
+              5,
+              5,
+              8,
+              9
+            ]
+          },
+          {
+            "level": 4,
+            "numbers": [
+              9,
+              7,
+              1,
+              2,
+              1,
+              4,
+              9,
+              7,
+              1,
+              1,
+              4,
+              8
+            ]
+          },
+          {
+            "level": 5,
+            "numbers": [
+              7,
+              8,
+              3,
+              3,
+              5,
+              4,
+              7,
+              8,
+              2,
+              5,
+              3
+            ]
+          },
+          {
+            "level": 6,
+            "numbers": [
+              6,
+              2,
+              6,
+              8,
+              9,
+              2,
+              6,
+              1,
+              7,
+              8
+            ]
+          },
+          {
+            "level": 7,
+            "numbers": [
+              8,
+              8,
+              5,
+              8,
+              2,
+              8,
+              7,
+              8,
+              6
+            ]
+          },
+          {
+            "level": 8,
+            "numbers": [
+              7,
+              4,
+              4,
+              1,
+              1,
+              6,
+              6,
+              5
+            ]
+          },
+          {
+            "level": 9,
+            "numbers": [
+              2,
+              8,
+              5,
+              2,
+              7,
+              3,
+              2
+            ]
+          }
+        ],
+        "baseVertex": 2,
+        "description": "O Triângulo da Vida condensa a vibração alfabética até o vértice 2, indicando a síntese energética da expressão do nome."
+      }
+    },
+    "dateAnalysis": {
+      "day": 22,
+      "month": 11,
+      "year": 1990,
+      "destino": 7,
+      "cycles": [
+        {
+          "cycleNumber": 1,
+          "value": 11,
+          "period": "Primeiro Ciclo (Formativo)",
+          "ageRange": "0 a 28 anos",
+          "title": "Ciclo Formativo - Vibração 11",
+          "symbolicInterpretation": "Período inicial focado na construção da identidade, aprendizados familiares e assimilação dos valores do Mês 11."
+        },
+        {
+          "cycleNumber": 2,
+          "value": 22,
+          "period": "Segundo Ciclo (Produtivo)",
+          "ageRange": "28 a 56 anos",
+          "title": "Ciclo Produtivo - Vibração 22",
+          "symbolicInterpretation": "Fase central da vida caracterizada pela busca de realizações pessoais, construção de carreira e maturidade sob regência do Dia 22."
+        },
+        {
+          "cycleNumber": 3,
+          "value": 1,
+          "period": "Terceiro Ciclo (Maturidade / Colheita)",
+          "ageRange": "56 anos em diante",
+          "title": "Ciclo da Colheita - Vibração 1",
+          "symbolicInterpretation": "Período de consolidação da sabedoria acumulada, síntese espiritual e legado sob influência do Ano 1990."
+        }
+      ],
+      "challenges": [
+        {
+          "challengeType": "Primeiro Desafio",
+          "value": 2,
+          "title": "Desafio da Juventude - Vibração 2",
+          "meaning": "Aprender a lidar com os conflitos emocionais e impulsos das fases iniciais.",
+          "learnings": [
+            "Desenvolver flexibilidade e paciência",
+            "Evitar reações precipitadas",
+            "Cultivar a autoconfiança"
+          ]
+        },
+        {
+          "challengeType": "Segundo Desafio",
+          "value": 3,
+          "title": "Desafio da Maturidade - Vibração 3",
+          "meaning": "Equilibrar ambições profissionais com estabilidade interna e inteligência emocional.",
+          "learnings": [
+            "Estabelecer limites saudáveis",
+            "Fortalecer a resiliência em momentos de mudança",
+            "Manter o foco nos objetivos de longo prazo"
+          ]
+        },
+        {
+          "challengeType": "Desafio Principal",
+          "value": 1,
+          "title": "Desafio Maior de Vida - Vibração 1",
+          "meaning": "O grande aprendizado central que atravessa todas as fases da existência.",
+          "learnings": [
+            "Transformar fragilidades em fortalezas conscientes",
+            "Buscar harmonia constante entre razão e intuição",
+            "Superar padrões de repetição"
+          ]
+        }
+      ],
+      "personalYear": {
+        "yearNumber": 7,
+        "currentYear": 2026,
+        "theme": "Autoconhecimento, Estudo e Solitude",
+        "interpretation": "Período de reflexão profunda, aprimoramento espiritual, estudos e escuta da intuição mística."
+      }
+    },
+    "calculatedAt": "2026-08-10T05:56:48.654Z"
+  },
+  "interpretation": {
+    "introducao": {
+      "cartaAbertura": "Seja muito bem-vindo ao seu MAPA CABALÍSTICO PERSONALIZADO, Carlos Eduardo. Este documento foi elaborado como um guia de reflexão e autoconhecimento, oferecendo uma leitura acolhedora sobre as tendências, os potenciais e os caminhos de aprendizado contidos em seu nome e em sua data de nascimento.",
+      "oQueE": "A numerologia cabalística é um sistema analítico antigo que interpreta o valor simbólico e vibracional das letras do nome e dos números da data de nascimento. Longe de ser um sistema determinista ou de previsão fatalista, ela funciona como um espelho reflexivo: mapeia padrões comportamentais, inclinações de personalidade e oportunidades de desenvolvimento pessoal para ajudar você a fazer escolhas mais conscientes no dia a dia.",
+      "comoInterpretar": "Para extrair o melhor proveito desta leitura, encare os números como direcionamentos e tendências, e não como verdades absolutas. Observe como os significados se manifestam na sua rotina e utilize estas informações como ferramentas práticas para aprimorar seus pontos fortes e gerenciar com sabedoria os seus momentos de transição.",
+      "metodologia": "A análise utiliza a correspondência numérica exata das consoantes e vogais do nome 'Carlos Eduardo Santos', combinada com a soma reduzida da data de nascimento de 22/11/1990. Através desta matemática simbólica, identificam-se os indicadores fundamentais de motivação, expressão, impressão, destino e missão."
+    },
+    "indicadoresTexto": {
+      "motivacaoText": "A Motivação representa o desejo mais íntimo da alma, aquilo que movimenta suas escolhas internas e o que verdadeiramente traz realização pessoal. No seu mapa, o resultado é o Número Mestre 11 (O Farol da Intuição e da Iluminação Espiritual). Isso indica uma busca profunda por significado, intuição aflorada e desejo de inspirar os outros. No cotidiano, manifesta-se através de pressentimentos apurados e uma necessidade de conectar suas ações a um propósito maior. Seus principais potenciais são a visão inspiradora, a empatia e a sensibilidade. Como ponto de atenção, convém cuidar do excesso de expectativa interna e da ansiedade provocada por uma percepção muito intensa do ambiente.",
+      "impressaoText": "A Impressão descreve a imagem inicial que você projeta para o mundo e a maneira como as pessoas costumam percebê-lo antes de conhecê-lo profundamente. Seu número é o 6 (O Harmonizador, o Amor Familiar e o Guardião da Beleza). Isso tende a fazer com que os outros enxerguem em você uma figura acolhedora, confiável, responsável e preocupada com o bem-estar coletivo. No dia a dia, é comum que as pessoas busquem seu conselho ou sintam uma sensação de segurança na sua presença. Seus pontos fortes incluem a diplomacia e o senso estético; como cuidado, vale evitar assumir responsabilidades e dores que pertencem aos outros.",
+      "expressaoText": "A Expressão revela os talentos práticos, as competências e a forma como você age no mundo físico e profissional. Seu número é o 8 (O Executivo, a Prosperidade e o Domínio do Poder Material). Representa a capacidade de organização, visão estratégica, autoridade e habilidade para gerenciar recursos ou projetos. No cotidiano, isso aparece como uma facilidade natural para liderar, tomar decisões objetivas e buscar eficiência. Seus potenciais são a resiliência, a autoconfiança e a visão prática. O ponto de atenção é evitar a rigidez excessiva ou o foco exclusivo nos resultados materiais.",
+      "destinoText": "O Destino aponta o caminho de vida, o tipo de experiências que o mundo trará ao seu encontro e as lições a serem integradas. Seu número é o 7 (O Pensador, a Busca da Verdade e a Sabedoria Mística). Dentro desta leitura simbólica, o seu caminho tende a ser marcado pela busca por conhecimento, aperfeiçoamento técnico, estudo e momentos de introspecção reflexiva. No cotidiano, você pode se ver atraído por pesquisas, análise detalhada de situações e busca por verdades mais profundas. Destacam-se o senso crítico e a profundidade intelectual, devendo-se ter cuidado com o isolamento excessivo e o ceticismo rígido.",
+      "missaoText": "A Missão é a síntese final do seu mapa, a contribuição que você é chamado a oferecer ao mundo ao longo da vida. Seu resultado é o número 6 (O Harmonizador). Trata-se de promover a harmonia, a justiça, o cuidado com a família e a construção de ambientes pacíficos e equilibrados. Na vida prática, significa utilizar seu poder prático (8) e sua intuição (11) para proteger, estruturar e servir à comunidade ou ao seu grupo familiar. Seus pontos fortes são o compromisso ético e a generosidade. O cuidado principal é não negligenciar o próprio autocuidado em nome do sacrifício pelos outros."
+    },
+    "nomeEData": {
+      "distribuicaoText": "A análise da frequência alfabética no nome 'Carlos Eduardo Santos' mostra um equilíbrio interessante entre números práticos e intuitivos. Há uma presença marcante de frequências associadas ao trabalho e à estrutura, contrabalançadas pela sensibilidade das vogais, garantindo que a razão e a intuição caminhem lado a lado.",
+      "trianguloText": "O Triângulo da Vida culmina no Vértice 2. Na numerologia cabalística, o número 2 representa a diplomacia, a cooperação, a paciência e a habilidade de atuar nos bastidores. Isso indica que, para alcançar o topo de seus objetivos materiais ou intelectuais, a parceria respeitosa e a capacidade de escuta serão as chaves mestras do seu sucesso.",
+      "dataIntegradaText": "A soma da sua data de nascimento (22/11/1990) combina duas frequências de Números Mestres (22 no dia e 11 no mês) que se reduzem ao Destino 7. Isso mostra que sua caminhada de vida exige elevado nível de maturidade, responsabilidade pessoal e constante busca por aprimoramento intelectual e espiritual."
+    },
+    "desafiosECiclos": {
+      "desafiosTexto": "Os Desafios indicam barreiras internas a serem trabalhadas. Seu Primeiro Desafio é o 2 (aprender a lidar com a sensibilidade e cultivar a paciência nas relações). O Segundo Desafio é o 3 (vencer a autocrítica e comunicar-se de forma livre e criativa). O Desafio Principal é o 1, que o convida a desenvolver uma independência saudável, coragem e liderança própria, sem medo de se destacar ou tomar a iniciativa.",
+      "ciclosTexto": "Seus Ciclos de Vida mostram a evolução do seu tempo. O Primeiro Ciclo (11) trouxe uma infância e juventude marcadas por intensa percepção e aprendizados intuitivos. O Segundo Ciclo (22), fase de maturidade produtiva, traz um enorme potencial para construir projetos sólidos e de grande impacto. O Terceiro Ciclo (1) reserva uma maturidade focada na autonomia, renovação e protagonismo pessoal.",
+      "anoPessoalTexto": "Você está vivenciando um Ano Pessoal 7. Este é um período propício para o autoconhecimento, estudo, planejamento estratégico e reflexão. É um excelente momento para aprimorar habilidades técnicas, ler mais, cuidar da mente e desacelerar o ritmo externo para organizar a rota do futuro."
+    },
+    "lifeAreas": [
+      {
+        "areaName": "Relacionamentos & Afeto",
+        "associatedNumber": 11,
+        "text": "Busca conexões profundas e autênticas. Não se satisfaz com conversas superficiais, preferindo vínculos baseados em reciprocidade e alinhamento de valores."
+      },
+      {
+        "areaName": "Família & Lar",
+        "associatedNumber": 6,
+        "text": "O ambiente doméstico é seu porto seguro. Existe uma dedicação natural em manter o lar harmonioso, acolhedor e seguro para as pessoas queridas."
+      },
+      {
+        "areaName": "Comunicação & Expressão",
+        "associatedNumber": 8,
+        "text": "Sua comunicação tende a ser direta, objetiva, segura e voltada para a solução prática de problemas, transmitindo credibilidade."
+      },
+      {
+        "areaName": "Profissão & Vocação",
+        "associatedNumber": 8,
+        "text": "Excelente aptidão para gestão, posições de responsabilidade, planejamento e liderança estratégica, com foco em eficiência e crescimento."
+      },
+      {
+        "areaName": "Finanças & Prosperidade",
+        "associatedNumber": 7,
+        "text": "Sua prosperidade financeira aumenta quando associada ao conhecimento especializado, análises criteriosas e decisões ponderadas."
+      },
+      {
+        "areaName": "Criatividade & Inovação",
+        "associatedNumber": 11,
+        "text": "Capacidade de ter ideias originais e fora da caixa, combinando intuição aguçada com soluções visionárias para desafios complexos."
+      },
+      {
+        "areaName": "Desenvolvimento Pessoal",
+        "associatedNumber": 6,
+        "text": "Evolui ao aprender a equilibrar o cuidado com o próximo e o amor-próprio, estabelecendo limites saudáveis com maturidade."
+      }
+    ],
+    "crossings": [
+      {
+        "title": "Motivação x Destino (Desejos da Alma x Caminho de Vida)",
+        "numbersCombined": "11 & 7",
+        "text": "O encontro da intuição refinada (11) com a busca analítica da verdade (7) cria uma mente inquisitiva, profunda e dotada de excelente percepção. Esta combinação permite unir a inspiração espiritual com a investigação rigorosa, sendo ideal para atividades que exijam especialização e sensibilidade humana."
+      },
+      {
+        "title": "Expressão x Destino (Talentos Práticos x Propósito de Vida)",
+        "numbersCombined": "8 & 7",
+        "text": "A capacidade executiva e de comando (8) encontra o caminho de aperfeiçoamento técnico e sabedoria (7). Isso indica que sua eficiência no mundo prático ganha força extraordinária quando fundamentada em conhecimento sólido, estratégia bem desenhada e ética irretocável."
+      }
+    ],
+    "sinteseFinal": {
+      "leituraIntegrada": "O MAPA CABALÍSTICO PERSONALIZADO de Carlos Eduardo Santos revela um perfil raro que combina força de realização prática (Expressão 8) com profunda sensibilidade e sabedoria (Motivação 11 e Destino 7). Sua jornada é marcada pelo equilíbrio entre a busca pela prosperidade material e o compromisso ético e afetuoso de servir de porto seguro para os outros (Missão 6).",
+      "potenciaisDestacados": [
+        "Visão estratégica e capacidade de liderança prática",
+        "Intuição apurada e sensibilidade para lidar com pessoas",
+        "Capacidade analítica e busca constante por aperfeiçoamento",
+        "Compromisso ético com a harmonia familiar e social"
+      ],
+      "desafiosPrincipais": [
+        "Evitar o isolamento e o ceticismo em momentos de estresse",
+        "Aprender a delegar e controlar a tendência à sobrecarga",
+        "Desenvolver a paciência e a comunicação clara nas parcerias"
+      ],
+      "reflexoesFinais": "Que esta leitura sirva como um farol para suas escolhas diárias. Lembre-se de que seus números revelam suas ferramentas, mas é sua consciência diária que constrói o seu verdadeiro caminho.",
+      "metricasValor": "Estudo elaborado a partir de 5 indicadores mestres, análise frequencial do nome, 7 áreas de vida e matriz de 3 ciclos temporais."
+    },
+    "isAiGenerated": true
+  }
+}
