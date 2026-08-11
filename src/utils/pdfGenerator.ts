@@ -161,7 +161,7 @@ export async function generateMapPDF(orderId: string, mapData: CabalisticMapData
         const cleanTitleText = sanitizeText(title);
         const cleanSubText = subtitle ? sanitizeText(subtitle) : undefined;
 
-        doc.fontSize(20).font('Helvetica-Bold');
+        doc.fontSize(22).font('Helvetica-Bold');
         const measuredTitleH = doc.heightOfString(cleanTitleText, {
           width: contentWidth,
           align: 'left'
@@ -169,7 +169,7 @@ export async function generateMapPDF(orderId: string, mapData: CabalisticMapData
 
         let measuredSubH = 0;
         if (cleanSubText) {
-          doc.fontSize(12).font('Helvetica');
+          doc.fontSize(13.5).font('Helvetica');
           measuredSubH = doc.heightOfString(cleanSubText, {
             width: contentWidth,
             align: 'left'
@@ -179,7 +179,7 @@ export async function generateMapPDF(orderId: string, mapData: CabalisticMapData
         const subGap = cleanSubText ? (8 + measuredSubH) : 0;
         const lineGap = 10;
         const lineThick = 1.2;
-        const spaceAfter = 16;
+        const spaceAfter = 18;
         const totalHeaderH = measuredTitleH + subGap + lineGap + lineThick + spaceAfter;
 
         const keepWithNext = 60;
@@ -192,7 +192,7 @@ export async function generateMapPDF(orderId: string, mapData: CabalisticMapData
         doc.save();
 
         doc.fillColor(purpleTitle)
-           .fontSize(20)
+           .fontSize(22)
            .font('Helvetica-Bold')
            .text(cleanTitleText, leftMargin, cursorY, { width: contentWidth, align: 'left' });
 
@@ -201,7 +201,7 @@ export async function generateMapPDF(orderId: string, mapData: CabalisticMapData
         if (cleanSubText) {
           cursorY += 8;
           doc.fillColor(textMutedDark)
-             .fontSize(12)
+             .fontSize(13.5)
              .font('Helvetica')
              .text(cleanSubText, leftMargin, cursorY, { width: contentWidth, align: 'left' });
           cursorY += measuredSubH;
@@ -230,11 +230,11 @@ export async function generateMapPDF(orderId: string, mapData: CabalisticMapData
           const cleanP = p.trim();
           if (!cleanP) continue;
 
-          doc.fontSize(12).font('Helvetica');
+          doc.fontSize(14).font('Helvetica');
           const pHeight = doc.heightOfString(cleanP, {
             width: contentWidth,
             align: 'justify',
-            lineGap: 4
+            lineGap: 5.5
           });
 
           const printablePageH = maxY - marginTop;
@@ -248,12 +248,12 @@ export async function generateMapPDF(orderId: string, mapData: CabalisticMapData
 
           doc.save();
           doc.fillColor(textDark)
-             .fontSize(12)
+             .fontSize(14)
              .font('Helvetica')
              .text(cleanP, leftMargin, cursorY, {
                width: contentWidth,
                align: 'justify',
-               lineGap: 4
+               lineGap: 5.5
              });
           doc.restore();
 
@@ -281,31 +281,31 @@ export async function generateMapPDF(orderId: string, mapData: CabalisticMapData
         const hasBadge = options.badgeValue !== undefined;
 
         // Configurações do Badge
-        const badgeW = 60;
-        const badgeH = 54;
+        const badgeW = 65;
+        const badgeH = 58;
         const badgeMarginRight = 16;
         const badgeX = leftMargin + contentWidth - badgeMarginRight - badgeW;
 
         // Largura útil para o texto dentro do card garantindo área independente (sem sobreposição com badge)
         const textWidth = hasBadge ? (contentWidth - 16 - 16 - badgeW - 16) : (contentWidth - 32);
 
-        doc.fontSize(14).font('Helvetica-Bold');
+        doc.fontSize(15.5).font('Helvetica-Bold');
         const titleH = doc.heightOfString(cleanTitle, {
           width: textWidth,
           align: 'left'
         });
 
-        doc.fontSize(11.5).font('Helvetica');
+        doc.fontSize(13.5).font('Helvetica');
         const textH = doc.heightOfString(cleanBody, {
           width: textWidth,
           align: 'justify',
-          lineGap: 3.5
+          lineGap: 5
         });
 
         const topPad = 14;
         const gap = 8;
         const botPad = 14;
-        const minBoxH = hasBadge ? (topPad + badgeH + botPad) : 55;
+        const minBoxH = hasBadge ? (topPad + badgeH + botPad) : 58;
         const contentH = topPad + titleH + gap + textH + botPad;
         const boxH = Math.max(minBoxH, contentH);
         const printablePageH = maxY - marginTop;
@@ -331,7 +331,7 @@ export async function generateMapPDF(orderId: string, mapData: CabalisticMapData
              .fill(options.accentColor);
 
           doc.fillColor(options.titleColor)
-             .fontSize(14)
+             .fontSize(15.5)
              .font('Helvetica-Bold')
              .text(cleanTitle, leftMargin + 16, boxY + topPad, { width: textWidth, align: 'left' });
 
@@ -347,11 +347,11 @@ export async function generateMapPDF(orderId: string, mapData: CabalisticMapData
 
             // Formatação do número e cálculo dinâmico de fonte para couber com folga
             const valStr = String(options.badgeValue).trim();
-            let numFontSize = 22;
+            let numFontSize = 24;
             if (valStr.length >= 3) {
-              numFontSize = 16;
+              numFontSize = 18;
             } else if (valStr.length >= 4) {
-              numFontSize = 12;
+              numFontSize = 14;
             }
 
             // Centralização exata vertical e horizontal dentro da caixa do badge
@@ -370,12 +370,12 @@ export async function generateMapPDF(orderId: string, mapData: CabalisticMapData
 
           const textY = boxY + topPad + titleH + gap;
           doc.fillColor(textDark)
-             .fontSize(11.5)
+             .fontSize(13.5)
              .font('Helvetica')
              .text(cleanBody, leftMargin + 16, textY, {
                width: textWidth,
                align: 'justify',
-               lineGap: 3.5
+               lineGap: 5
              });
 
           doc.restore();
@@ -383,7 +383,7 @@ export async function generateMapPDF(orderId: string, mapData: CabalisticMapData
           layoutTracker.register('card_box', currentPage, leftMargin, boxY, contentWidth, boxH);
           cursorY = boxY + boxH + spaceAfter;
         } else {
-          doc.fontSize(14).font('Helvetica-Bold');
+          doc.fontSize(15.5).font('Helvetica-Bold');
           const titleMeasuredH = doc.heightOfString(cleanTitle, { width: contentWidth, align: 'left' });
 
           if (cursorY + titleMeasuredH + 40 > maxY && cursorY > marginTop) {
@@ -395,7 +395,7 @@ export async function generateMapPDF(orderId: string, mapData: CabalisticMapData
 
           doc.save();
           doc.fillColor(options.titleColor)
-             .fontSize(14)
+             .fontSize(15.5)
              .font('Helvetica-Bold')
              .text(cleanTitle, leftMargin, cursorY, { width: contentWidth, align: 'left' });
           doc.restore();
@@ -408,19 +408,19 @@ export async function generateMapPDF(orderId: string, mapData: CabalisticMapData
             cursorY = layoutTracker.ensureNoOverlap(currentPage, cursorY, 0);
 
             doc.save();
-            doc.rect(leftMargin, cursorY, 180, 28)
+            doc.rect(leftMargin, cursorY, 200, 32)
                .fill(options.bgColor)
                .strokeColor(options.borderColor)
                .lineWidth(1)
                .stroke();
             doc.fillColor(options.titleColor)
-               .fontSize(11)
+               .fontSize(12)
                .font('Helvetica-Bold')
-               .text(`Vibração Mestra: ${options.badgeValue}`, leftMargin + 10, cursorY + 7);
+               .text(`Vibração Mestra: ${options.badgeValue}`, leftMargin + 10, cursorY + 8);
             doc.restore();
 
-            layoutTracker.register('card_badge', currentPage, leftMargin, cursorY, 180, 28);
-            cursorY += 36;
+            layoutTracker.register('card_badge', currentPage, leftMargin, cursorY, 200, 32);
+            cursorY += 40;
           }
 
           renderParagraph(cleanBody, spaceAfter);
@@ -454,31 +454,31 @@ export async function generateMapPDF(orderId: string, mapData: CabalisticMapData
       const birthDateClean = formatDateBR(sanitizeText(mapData.userInfo.formattedBirthDate || mapData.userInfo.birthDate));
 
       doc.fillColor(goldBright)
-         .fontSize(12)
+         .fontSize(13)
          .font('Helvetica-Bold')
          .text('ESTUDO NUMEROLÓGICO INDIVIDUAL', 0, 185, { align: 'center' });
 
       doc.fillColor(textLight)
-         .fontSize(28)
+         .fontSize(30)
          .font('Helvetica-Bold')
          .text('MAPA CABALÍSTICO', 0, 220, { align: 'center' });
 
       doc.fillColor(purplePrimary)
-         .fontSize(20)
+         .fontSize(22)
          .font('Helvetica-Bold')
          .text('PERSONALIZADO', 0, 258, { align: 'center' });
 
       doc.moveTo(140, 295).lineTo(doc.page.width - 140, 295).strokeColor(goldAccent).lineWidth(1).stroke();
 
-      doc.fillColor(goldBright).fontSize(10).font('Helvetica-Bold').text('PREPARADO EXCLUSIVAMENTE PARA:', 0, 350, { align: 'center' });
-      doc.fillColor(textLight).fontSize(22).font('Helvetica-Bold').text(fullNameClean, 0, 375, { align: 'center' });
+      doc.fillColor(goldBright).fontSize(11).font('Helvetica-Bold').text('PREPARADO EXCLUSIVAMENTE PARA:', 0, 350, { align: 'center' });
+      doc.fillColor(textLight).fontSize(24).font('Helvetica-Bold').text(fullNameClean, 0, 375, { align: 'center' });
 
-      doc.fillColor(goldBright).fontSize(10).font('Helvetica-Bold').text('DATA DE NASCIMENTO:', 0, 435, { align: 'center' });
-      doc.fillColor(textLight).fontSize(16).font('Helvetica').text(birthDateClean, 0, 455, { align: 'center' });
+      doc.fillColor(goldBright).fontSize(11).font('Helvetica-Bold').text('DATA DE NASCIMENTO:', 0, 435, { align: 'center' });
+      doc.fillColor(textLight).fontSize(17).font('Helvetica').text(birthDateClean, 0, 455, { align: 'center' });
 
       doc.rect(110, 670, doc.page.width - 220, 65).fill(coverBox).strokeColor(purplePrimary).lineWidth(1).stroke();
-      doc.fillColor(goldBright).fontSize(9).font('Helvetica-Bold').text(`CÓDIGO DE REGISTRO: ${orderId}`, 0, 686, { align: 'center' });
-      doc.fillColor(textLight).fontSize(9).font('Helvetica').text(`DATA DE EMISSÃO: ${new Date().toLocaleDateString('pt-BR')}`, 0, 706, { align: 'center' });
+      doc.fillColor(goldBright).fontSize(9.5).font('Helvetica-Bold').text(`CÓDIGO DE REGISTRO: ${orderId}`, 0, 686, { align: 'center' });
+      doc.fillColor(textLight).fontSize(9.5).font('Helvetica').text(`DATA DE EMISSÃO: ${new Date().toLocaleDateString('pt-BR')}`, 0, 706, { align: 'center' });
 
       // =========================================================================
       // PÁGINAS INTERNAS
@@ -549,8 +549,8 @@ export async function generateMapPDF(orderId: string, mapData: CabalisticMapData
         if (!cleanRec) return;
 
         const bulletText = `•  ${cleanRec}`;
-        doc.fontSize(11.5).font('Helvetica');
-        const recH = doc.heightOfString(bulletText, { width: contentWidth - 15, lineGap: 3 });
+        doc.fontSize(13.5).font('Helvetica');
+        const recH = doc.heightOfString(bulletText, { width: contentWidth - 15, lineGap: 5 });
 
         ensureSpace(recH + 6);
 
@@ -560,9 +560,9 @@ export async function generateMapPDF(orderId: string, mapData: CabalisticMapData
 
         doc.save();
         doc.fillColor(textDark)
-           .fontSize(11.5)
+           .fontSize(13.5)
            .font('Helvetica')
-           .text(bulletText, leftMargin + 10, cursorY, { width: contentWidth - 15, align: 'justify', lineGap: 3 });
+           .text(bulletText, leftMargin + 10, cursorY, { width: contentWidth - 15, align: 'justify', lineGap: 5 });
         doc.restore();
 
         currentPage = doc.bufferedPageRange().count - 1;

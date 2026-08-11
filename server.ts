@@ -10,6 +10,14 @@ import { buildFullCabalisticMap } from './src/services/mapBuilder.js';
 import { buildMapPDF } from './src/pdf/pdfBuilder.js';
 import { runEngineTests } from './src/numerology/engine.test.js';
 
+import {
+  createKaelSession,
+  handleKaelUserMessage,
+  KAEL_MESSAGES
+} from './src/services/kaelService.js';
+import { runKaelNLUTests } from './src/services/kaelService.test.js';
+import { KaelSession, KaelMessage } from './src/types/kael.js';
+
 interface Order {
   id: string;
   name: string;
@@ -25,6 +33,7 @@ const DATA_DIR = path.join(process.cwd(), 'data');
 const PDFS_DIR = path.join(DATA_DIR, 'pdfs');
 const ORDERS_FILE = path.join(DATA_DIR, 'orders.json');
 const MAPS_FILE = path.join(DATA_DIR, 'maps.json');
+const KAEL_FILE = path.join(DATA_DIR, 'kael_sessions.json');
 
 // Garante que o diretório data, pdfs e os arquivos JSON existam
 if (!fs.existsSync(DATA_DIR)) {
@@ -38,6 +47,28 @@ if (!fs.existsSync(ORDERS_FILE)) {
 }
 if (!fs.existsSync(MAPS_FILE)) {
   fs.writeFileSync(MAPS_FILE, JSON.stringify([], null, 2));
+}
+if (!fs.existsSync(KAEL_FILE)) {
+  fs.writeFileSync(KAEL_FILE, JSON.stringify({}, null, 2));
+}
+
+// Funções auxiliares para manipulação de sessões do Kael no JSON
+function readKaelSessions(): Record<string, KaelSession> {
+  try {
+    const data = fs.readFileSync(KAEL_FILE, 'utf-8');
+    return JSON.parse(data);
+  } catch (err) {
+    console.error('Erro ao ler kael_sessions.json:', err);
+    return {};
+  }
+}
+
+function saveKaelSessions(sessions: Record<string, KaelSession>): void {
+  try {
+    fs.writeFileSync(KAEL_FILE, JSON.stringify(sessions, null, 2), 'utf-8');
+  } catch (err) {
+    console.error('Erro ao salvar kael_sessions.json:', err);
+  }
 }
 
 // Funções auxiliares para manipulação de pedidos no JSON
@@ -121,6 +152,178 @@ async function startServer() {
       return res.json(result);
     } catch (error: any) {
       return res.status(500).json({ passed: false, logs: [error?.message || 'Erro nos testes'] });
+    }
+  });
+
+  // === ROTAS DO KAEL (ASSISTENTE DE VENDAS) ===
+
+  // 1. Iniciar/Obter Sessão Kael
+  app.post('/api/kael/session', (req: Request, res: Response) => {
+    try {
+      let { sessionId } = req.body;
+      if (!sessionId) {
+        sessionId = `kael-sess-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`;
+      }
+
+      const sessions = readKaelSessions();
+      if (!sessions[sessionId]) {
+        sessions[sessionId] = createKaelSession(sessionId);
+        saveKaelSessions(sessions);
+      }
+
+      return res.json({ success: true, session: sessions[sessionId] });
+    } catch (error) {
+      console.error('Erro na sessão Kael:', error);
+      return res.status(500).json({ error: 'Erro ao iniciar sessão do Kael.' });
+    }
+  });
+
+  // 2. Enviar Mensagem ao Kael
+  app.post('/api/kael/chat', async (req: Request, res: Response) => {
+    try {
+      const { sessionId, message } = req.body;
+
+      if (!sessionId || !message || typeof message !== 'string') {
+        return res.status(400).json({ error: 'Sessão e mensagem válidas são obrigatórias.' });
+      }
+
+      const sessions = readKaelSessions();
+      let session = sessions[sessionId];
+
+      if (!session) {
+        session = createKaelSession(sessionId);
+      }
+
+      const apiKey = process.env.GEMINI_API_KEY;
+      let aiFn: ((prompt: string) => Promise<string>) | undefined = undefined;
+
+      if (apiKey) {
+        const ai = new GoogleGenAI({
+          apiKey,
+          httpOptions: { headers: { 'User-Agent': 'aistudio-build' } }
+        });
+        aiFn = async (prompt: string) => {
+          const resp = await ai.models.generateContent({
+            model: 'gemini-3.6-flash',
+            contents: prompt,
+            config: { temperature: 0.6 }
+          });
+          return resp.text || '';
+        };
+      }
+
+      const { updatedSession, newMessages } = await handleKaelUserMessage(session, message, aiFn);
+      sessions[sessionId] = updatedSession;
+      saveKaelSessions(sessions);
+
+      return res.json({ success: true, session: updatedSession, newMessages });
+    } catch (error) {
+      console.error('Erro no chat Kael:', error);
+      return res.status(500).json({ error: 'Erro ao processar mensagem com o Kael.' });
+    }
+  });
+
+  // 3. Simular/Confirmar Pagamento do Kael e gerar Mapa + PDF com os motores EXISTENTES
+  app.post('/api/kael/confirm-payment', async (req: Request, res: Response) => {
+    try {
+      const { sessionId } = req.body;
+
+      if (!sessionId) {
+        return res.status(400).json({ error: 'Sessão é obrigatória.' });
+      }
+
+      const sessions = readKaelSessions();
+      const session = sessions[sessionId];
+
+      if (!session) {
+        return res.status(404).json({ error: 'Sessão não encontrada.' });
+      }
+
+      if (!session.fullName || !session.birthDate) {
+        return res.status(400).json({ error: 'Nome e data de nascimento são necessários para gerar o mapa.' });
+      }
+
+      const now = new Date().toISOString();
+
+      // 1. Pagamento aprovado
+      session.paymentStatus = 'pago';
+      session.currentState = 'PAGAMENTO_CONFIRMADO';
+
+      const msg6: KaelMessage = {
+        id: `kael-${Date.now()}-6`,
+        sender: 'kael',
+        text: KAEL_MESSAGES.MSG_6,
+        timestamp: now
+      };
+      session.messages.push(msg6);
+
+      // 2. Estado em processamento e geração com os motores EXISTENTES
+      session.currentState = 'MAPA_EM_PROCESSAMENTO';
+
+      const mapData = await buildFullCabalisticMap(session.fullName, session.birthDate);
+      await buildMapPDF(mapData);
+
+      session.mapId = mapData.id;
+      session.pdfUrl = `/api/pdf/${mapData.id}`;
+      session.currentState = 'PDF_PRONTO';
+
+      const msg7: KaelMessage = {
+        id: `kael-${Date.now()}-7`,
+        sender: 'kael',
+        text: KAEL_MESSAGES.MSG_7,
+        pdfUrl: session.pdfUrl,
+        timestamp: new Date().toISOString()
+      };
+      session.messages.push(msg7);
+
+      // 3. Transição para Pós-venda e Suporte
+      session.currentState = 'POS_VENDA';
+      session.mapDelivered = true;
+      session.conversationMode = 'SUPORTE_MAPA';
+      const msg8: KaelMessage = {
+        id: `kael-${Date.now()}-8`,
+        sender: 'kael',
+        text: KAEL_MESSAGES.MSG_8,
+        timestamp: new Date().toISOString()
+      };
+      session.messages.push(msg8);
+
+      sessions[sessionId] = session;
+      saveKaelSessions(sessions);
+
+      return res.json({ success: true, session });
+    } catch (error) {
+      console.error('Erro ao confirmar pagamento Kael:', error);
+      return res.status(500).json({ error: 'Erro interno ao processar e gerar o Mapa Cabalístico.' });
+    }
+  });
+
+  // 4. Resetar Sessão do Kael
+  app.post('/api/kael/reset', (req: Request, res: Response) => {
+    try {
+      const { sessionId, oldSessionId, newSessionId } = req.body;
+      const targetOldSessionId = oldSessionId || sessionId;
+      const targetNewSessionId = newSessionId || `kael-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`;
+
+      const sessions = readKaelSessions();
+
+      // Deleta a sessão anterior do histórico e da memória
+      if (targetOldSessionId && sessions[targetOldSessionId]) {
+        delete sessions[targetOldSessionId];
+      }
+      if (sessionId && sessions[sessionId] && sessionId !== targetNewSessionId) {
+        delete sessions[sessionId];
+      }
+
+      // Cria uma nova sessão de atendimento completamente independente e zerada
+      const newSession = createKaelSession(targetNewSessionId);
+      sessions[targetNewSessionId] = newSession;
+      saveKaelSessions(sessions);
+
+      return res.json({ success: true, session: newSession });
+    } catch (error) {
+      console.error('Erro ao resetar sessão Kael:', error);
+      return res.status(500).json({ error: 'Erro ao resetar a sessão do Kael.' });
     }
   });
 
@@ -329,6 +532,10 @@ Responda às dúvidas de ${order.name} com sabedoria, tom místico porem claro, 
       res.sendFile(path.join(distPath, 'index.html'));
     });
   }
+
+  // Executa testes do motor numerológico e do interpretador NLU do Kael
+  runEngineTests();
+  await runKaelNLUTests();
 
   app.listen(PORT, '0.0.0.0', () => {
     console.log(`✨ Servidor Mapa Cabalístico rodando na porta ${PORT}`);
