@@ -507,6 +507,9 @@ export async function interpretClientMessage(
   // 1. Tentar classificação via IA Gemini (se aiAnswerFn estiver disponível)
   if (aiAnswerFn) {
     try {
+      console.log(`\n==================================================`);
+      console.log(`[KAEL NLU LOG] 1. MENSAGEM RECEBIDA: "${userText}" | ESTADO: ${currentState}`);
+
       const historySnippet = (session.messages || [])
         .slice(-6)
         .map(m => `${m.sender.toUpperCase()}: ${m.text}`)
@@ -556,8 +559,11 @@ Responda EXCLUSIVAMENTE em formato JSON puro com esta estrutura:
 }`;
 
       const aiResponse = await aiAnswerFn(classificationPrompt);
+      console.log(`[KAEL NLU LOG] 2. RESULTADO DA IA (RAW):`, aiResponse);
+
       const cleanJson = aiResponse.replace(/```json/gi, '').replace(/```/g, '').trim();
       const parsed = JSON.parse(cleanJson);
+      console.log(`[KAEL NLU LOG] 3. OBJETO PARSEADO DA IA:`, parsed);
 
       if (parsed && parsed.intent) {
         const nonDataIntents: MessageIntent[] = [
@@ -568,35 +574,36 @@ Responda EXCLUSIVAMENTE em formato JSON puro com esta estrutura:
         ];
 
         let extractedDate: ExtractedBirthDate | null = null;
-        if (parsed.birthDateFormatted && parsed.birthDateISO) {
-          let isValid = true;
-          if (parsed.birthDateISO) {
-            const parts = parsed.birthDateISO.split('-');
-            if (parts.length === 3) {
-              const year = parseInt(parts[0], 10);
-              const month = parseInt(parts[1], 10);
-              const day = parseInt(parts[2], 10);
-              isValid = isValidCalendarDate(day, month, year);
-            }
-          }
-          extractedDate = {
-            formatted: parsed.birthDateFormatted,
-            iso: parsed.birthDateISO,
-            isValid,
-            originalMatchedStr: userText
-          };
-        } else if (parsed.intent === 'BIRTH_DATE' || parsed.intent === 'NAME_AND_BIRTH_DATE' || parsed.intent === 'CORRECTION' || parsed.intent === 'REQUEST_CHANGE_DATA') {
+
+        // Validação determinística de qualquer data extraída pela IA ou presente no texto do usuário
+        if (parsed.birthDateFormatted) {
+          extractedDate = extractBirthDate(parsed.birthDateFormatted);
+        }
+        if (!extractedDate && parsed.birthDateISO) {
+          extractedDate = extractBirthDate(parsed.birthDateISO);
+        }
+        if (!extractedDate) {
           extractedDate = extractBirthDate(userText);
         }
 
+        let finalIntent = parsed.intent as MessageIntent;
+        // Se a IA marcou INVALID_DATE mas o extrator encontrou uma data VÁLIDA real, corrige a intenção
+        if (extractedDate && extractedDate.isValid && finalIntent === 'INVALID_DATE') {
+          finalIntent = parsed.fullName ? 'NAME_AND_BIRTH_DATE' : 'BIRTH_DATE';
+        }
+
         let finalFullName = parsed.fullName || null;
-        if (nonDataIntents.includes(parsed.intent as MessageIntent) && parsed.intent !== 'CORRECTION' && parsed.intent !== 'REQUEST_CHANGE_DATA') {
+        if (nonDataIntents.includes(finalIntent) && finalIntent !== 'CORRECTION' && finalIntent !== 'REQUEST_CHANGE_DATA') {
           finalFullName = null;
           extractedDate = null;
         }
 
+        console.log(`[KAEL NLU LOG] 4. birthDate EXTRAÍDO:`, extractedDate);
+        console.log(`[KAEL NLU LOG] 5. isValid:`, extractedDate?.isValid);
+        console.log(`[KAEL NLU LOG] 6. INTENT FINAL:`, finalIntent);
+
         return {
-          intent: parsed.intent as MessageIntent,
+          intent: finalIntent,
           fullName: finalFullName,
           birthDate: extractedDate,
           explanation: parsed.explanation || '',
@@ -1113,13 +1120,17 @@ export async function handleKaelUserMessage(
   }
 
   // 1.4 DATA INVÁLIDA NO CALENDÁRIO
-  if (interpretation.intent === 'INVALID_DATE' || (interpretation.birthDate && !interpretation.birthDate.isValid)) {
+  const isInvalidDate = interpretation.intent === 'INVALID_DATE' || (interpretation.birthDate && !interpretation.birthDate.isValid);
+  console.log(`[KAEL FLOW LOG] 7. IF INVALID_DATE verificado: ${isInvalidDate} | intent: ${interpretation.intent} | birthDate:`, interpretation.birthDate);
+
+  if (isInvalidDate) {
     const replyMsg: KaelMessage = {
       id: `kael-${Date.now()}-invalid-date`,
       sender: 'kael',
       text: 'Essa data de nascimento parece estar inválida no calendário. Pode conferir sua data de nascimento e me enviar novamente?',
       timestamp: now
     };
+    console.log(`[KAEL FLOW LOG] 8. RESPOSTA ENVIADA:`, replyMsg.text);
     session.messages.push(replyMsg);
     newMessages.push(replyMsg);
     return { updatedSession: session, newMessages };
