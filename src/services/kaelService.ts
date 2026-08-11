@@ -12,6 +12,8 @@ Hoje pode ser o início de uma nova compreensão sobre você mesmo.`,
 
 O seu Mapa Numerológico Cabalístico revela aspectos profundos da sua personalidade, seus talentos naturais, desafios, missão de vida, ciclos atuais, potencial profissional, prosperidade, relacionamentos e caminhos para o seu desenvolvimento pessoal e espiritual.
 
+O Mapa Numerológico Cabalístico está em promoção no momento: de R$ 50,00 por apenas R$ 15,00.
+
 Cada mapa é elaborado de forma personalizada com base exclusivamente nos seus dados.`,
 
   MSG_3: `Para iniciar a elaboração do seu mapa, preciso apenas de duas informações:
@@ -72,28 +74,169 @@ const NON_NAME_WORDS = new Set([
   'que', 'tipo', 'de', 'informação', 'informacao', 'preciso', 'mandar', 'enviar',
   'mas', 'meu', 'nome', 'nao', 'não', 'tem', 'acento', 'acentos', 'sem', 'com',
   'entendeu', 'fala', 'sobre', 'relacionamento', 'quanto', 'custa', 'qual', 'valor',
-  'porque', 'por', 'como', 'funciona', 'onde', 'quando', 'coisa', 'fazer', 'saber',
+  'porque', 'por', 'como', 'funciona', 'onde', 'quando', 'coisa', 'coisas', 'fazer', 'saber',
   'posso', 'ter', 'pode', 'gerar', 'agora', 'obrigado', 'obrigada', 'valeu', 'entendi',
   'voce', 'você', 'esta', 'está', 'tá', 'ta', 'sim', 'resposta', 'pergunta', 'duvida',
   'dúvida', 'significa', 'quais', 'esse', 'essa', 'este', 'esta', 'mudar', 'preço',
   'preco', 'pagar', 'pix', 'paguei', 'pago', 'cancelar', 'desisto', 'tchau', 'adeus',
-  'falei', 'falou', 'falar', 'disse', 'dizer', 'entender', 'estou', 'estamos',
+  'falei', 'falou', 'falar', 'falare', 'disse', 'dizer', 'entender', 'estou', 'estamos',
   'certo', 'correto', 'confirmo', 'continuar', 'seguir', 'perfeito', 'tudo',
   'resetar', 'reset', 'reiniciar', 'reinicia', 'voltar', 'começo', 'comeco', 'inicio',
   'início', 'primeiras', 'mensagens', 'apaga', 'esquece', 'refazer', 'novamente',
   'mandei', 'errado', 'errada', 'dados', 'corrigir', 'alterar', 'mae', 'mãe',
   'pai', 'filho', 'filha', 'esposa', 'marido', 'amigo', 'amiga', 'outra', 'pessoa',
-  'comprar', 'fazer', 'pedir', 'burro', 'repetindo', 'confusao', 'confusão',
-  'cientifico', 'científico', 'serve', 'sirve', 'acreditar', 'astral', 'dizer',
+  'comprar', 'fazer', 'pedir', 'burro', 'repetindo', 'repetidas', 'repetido', 'repetidos', 'repetir',
+  'confusao', 'confusão', 'cientifico', 'científico', 'serve', 'sirve', 'acreditar', 'astral',
   'revela', 'profissão', 'profissao', 'trabalho', 'carreira', 'amor', 'relacionamentos',
   'dinheiro', 'prosperidade', 'finanças', 'financas', 'resultado', 'impacto', 'diz',
   'faço', 'faco', 'tinha', 'digitado', 'coloquei', 'antes', 'depois', 'queria', 'quero',
-  'verdade', 'realmente', 'mesmo', 'saber', 'diferença', 'diferenca',
+  'verdade', 'realmente', 'mesmo', 'saber', 'diferença', 'diferenca', 'so', 'só',
+  'alguem', 'alguém', 'humano', 'atendente', 'suporte', 'atendimento', 'ia', 'robo', 'robô', 'bot',
+  'inteligencia', 'inteligência', 'artificial', 'responde', 'resposta',
   'janeiro', 'jan', 'fevereiro', 'fev', 'marco', 'março', 'mar', 'abril', 'abr',
   'maio', 'mai', 'junho', 'jun', 'julho', 'jul', 'agosto', 'ago', 'setembro', 'set',
   'outubro', 'out', 'novembro', 'nov', 'dezembro', 'dez', 'nasci', 'dia', 'mes', 'mês',
   'ano', 'data', 'nascimento', 'minha'
 ]);
+
+// Dicionário expandido de palavras e verbos associados a medos, objeções, dúvidas e frases conversacionais
+const OBJECTION_AND_FEAR_WORDS = new Set([
+  'medo', 'medos', 'perder', 'perda', 'perco', 'perdi', 'dinheiro', 'receber', 'recebo', 'recebi',
+  'pagar', 'paguei', 'pagamento', 'confiavel', 'confiável', 'seguro', 'segurança', 'garantia', 'garantir',
+  'golpe', 'fraude', 'engano', 'enganação', 'enganacao', 'fraudar', 'duvida', 'dúvida', 'duvidas', 'dúvidas',
+  'perguntar', 'pergunta', 'custa', 'custo', 'valor', 'preço', 'preco', 'investimento', 'reais', 'gratis',
+  'grátis', 'promoção', 'promocao', 'comprar', 'comprei', 'compraria', 'adquirir', 'cancelar', 'desistir',
+  'desisto', 'continuar', 'prosseguir', 'saber', 'sei', 'sabe', 'queria', 'quero', 'gostaria', 'acho',
+  'achando', 'tenho', 'temos', 'estou', 'estamos', 'to', 'tô', 'tou', 'vou', 'vai', 'vamos', 'ficar',
+  'ficaria', 'fazer', 'fiz', 'farei', 'funciona', 'funcionar', 'cientifico', 'científico', 'certeza',
+  'dizer', 'falar', 'falou', 'disse', 'mandei', 'enviei', 'enviar', 'coloquei', 'digitei', 'escrevi',
+  'pensar', 'pensei', 'sabia', 'ver', 'vi', 'olha', 'olhar', 'entender', 'entendi', 'entendeu', 'explicar',
+  'explica', 'ajudar', 'ajuda', 'atender', 'atende', 'atendimento', 'meu', 'minha', 'seu', 'sua',
+  'alguem', 'alguém', 'humano', 'atendente', 'pessoa', 'suporte', 'atendimento', 'verdade',
+  'ia', 'robo', 'robô', 'bot', 'inteligencia', 'inteligência', 'artificial', 'coisas', 'repetidas', 'repetindo', 'repetir', 'responde'
+]);
+
+// Validação Determinística para Nomes Candidatos
+export function isValidCandidateName(
+  candidateName: string | null | undefined,
+  originalText: string,
+  currentState: KaelState,
+  session: KaelSession
+): boolean {
+  if (!candidateName || typeof candidateName !== 'string') return false;
+
+  const trimmedCandidate = candidateName.trim();
+  if (trimmedCandidate.length < 2) return false;
+
+  const normCandidate = trimmedCandidate.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  const normOriginal = originalText.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+
+  // 1. Não pode conter pontuação de interrogação
+  if (originalText.includes('?')) return false;
+
+  // 2. Não pode conter dígitos numéricos
+  if (/\d/.test(normCandidate)) return false;
+
+  const hasExplicitNameIntro = /meu nome [ée]\s+/i.test(originalText) ||
+    /me chamo\s+/i.test(originalText) ||
+    /o nome correto [ée]\s+/i.test(originalText) ||
+    /o correto [ée]\s+/i.test(originalText) ||
+    /trocar para\s+/i.test(originalText) ||
+    /mudar para\s+/i.test(originalText) ||
+    /corrige para\s+/i.test(originalText) ||
+    /corrigir para\s+/i.test(originalText);
+
+  // 3. Verificação de palavras de dúvida/pergunta no texto original (permitido se houver introdução explícita de nome)
+  const questionWords = [
+    'o que', 'como', 'qual', 'quanto', 'porque', 'por que', 'onde', 'quando',
+    'fala de', 'fala sobre', 'preciso', 'onde manda', 'posso', 'pode', 'duvida',
+    'dúvida', 'funciona', 'cientifico', 'científico', 'serve', 'acreditar',
+    'confiável', 'confiavel', 'saber se', 'será', 'seria', 'é seguro', 'e seguro'
+  ];
+  if (!hasExplicitNameIntro && questionWords.some(qw => normOriginal.includes(qw))) return false;
+
+  // 4. Verificação de palavras/frases de objeção, medo, preço e conversa no texto original
+  const objectionPhrases = [
+    'medo', 'perder', 'dinheiro', 'perda', 'perco', 'confiavel', 'confiável',
+    'custa', 'valor', 'preço', 'preco', 'comprar', 'pagar', 'receber', 'recebo',
+    'duvida', 'dúvida', 'fraude', 'golpe', 'garantia', 'certeza', 'reais',
+    'não quero', 'nao quero', 'não vou', 'nao vou', 'cancelar', 'desisto',
+    'sim', 'não', 'nao', 'pode continuar', 'tudo certo', 'está certo', 'esta certo',
+    'está correto', 'esta correto', 'olá', 'ola', 'bom dia', 'boa tarde', 'boa noite', 'tchau',
+    'alguem', 'alguém', 'humano', 'atendente', 'pessoa', 'suporte', 'atendimento',
+    'verdade', 'ia', 'robo', 'robô', 'bot', 'inteligencia', 'inteligência', 'artificial',
+    'coisas', 'repetidas', 'repetindo', 'repetir', 'resposta', 'responde',
+    'queria', 'quero', 'gostaria', 'posso', 'pode', 'como', 'porque', 'por que',
+    'voce', 'você', 'estou', 'tenho', 'so responde', 'só responde', 'so fala', 'só fala'
+  ];
+
+  if (objectionPhrases.some(ok => normOriginal.includes(ok)) && !hasExplicitNameIntro) {
+    return false;
+  }
+
+  // 5. Verificação das palavras do nome candidato contra palavras reservadas
+  const words = normCandidate.split(/\s+/).filter(w => w.length > 0);
+  const prepositions = new Set(['de', 'da', 'do', 'das', 'dos', 'e']);
+
+  for (const w of words) {
+    if (prepositions.has(w)) continue;
+    if (NON_NAME_WORDS.has(w) || OBJECTION_AND_FEAR_WORDS.has(w)) {
+      return false;
+    }
+  }
+
+  // 6. Contagem de palavras válidas
+  const nonPrepWords = words.filter(w => !prepositions.has(w));
+
+  if (nonPrepWords.length === 1) {
+    if (!hasExplicitNameIntro) {
+      return false; // Nome de 1 única palavra sem introdução explícita não é aceito
+    }
+  } else if (nonPrepWords.length < 2) {
+    return false; // Menos de 2 palavras não é um nome completo válido
+  }
+
+  // 7. PROTEÇÃO RÍGIDA CONTRA SUBSTITUIÇÃO DE NOME JÁ CONFIRMADO NA SESSÃO:
+  // Se o nome e a data já estão salvos e confirmados na sessão,
+  // NÃO SUBSTITUIR o nome a menos que haja um marcador EXPLÍCITO de correção de dados OU estejamos em um sub-estado de correção!
+  const isCorrectionContext =
+    session.subState === 'CORRIGINDO_NOME' ||
+    session.pendingCorrection === 'fullName' ||
+    session.subState === 'AGUARDANDO_QUAL_DADO';
+
+  const hasConfirmedData = Boolean(session.fullName && session.birthDate);
+  if (hasConfirmedData && !isCorrectionContext) {
+    const isExplicitCorrection =
+      /meu nome (est[aá]|era|ficou) errado/i.test(originalText) ||
+      /nome (est[aá]|era|ficou) errado/i.test(originalText) ||
+      /dados (est[aá]o|ficaram) errados/i.test(originalText) ||
+      /mandei (o nome|os dados|errado)/i.test(originalText) ||
+      /errei (o nome|meu nome)/i.test(originalText) ||
+      /corrigir (o nome|meu nome)/i.test(originalText) ||
+      /mudar (o nome|meu nome)/i.test(originalText) ||
+      /alterar (o nome|meu nome)/i.test(originalText) ||
+      /trocar (o nome|meu nome)/i.test(originalText) ||
+      /coloquei (o nome|meu nome) errado/i.test(originalText) ||
+      /o nome correto [ée]/i.test(originalText) ||
+      /o correto [ée]/i.test(originalText) ||
+      /correto [ée]/i.test(originalText) ||
+      /meu nome [ée]/i.test(originalText) ||
+      /me chamo/i.test(originalText) ||
+      /corrige para/i.test(originalText) ||
+      /corrigir para/i.test(originalText);
+
+    if (!isExplicitCorrection) {
+      const isCleanNameInConfirmation = currentState === 'CONFIRMACAO_DOS_DADOS' &&
+        nonPrepWords.length >= 2;
+
+      if (!isCleanNameInConfirmation) {
+        return false;
+      }
+    }
+  }
+
+  return true;
+}
 
 // Helper para validar existência real da data no calendário
 export function isValidCalendarDate(day: number, month: number, year: number): boolean {
@@ -121,6 +264,9 @@ const MONTH_NAMES_MAP: Record<string, number> = {
 };
 
 export interface ExtractedBirthDate {
+  day: number;
+  month: number;
+  year: number;
   formatted: string;
   iso: string;
   isValid: boolean;
@@ -130,12 +276,9 @@ export interface ExtractedBirthDate {
 // Helper para formatar data de nascimento para exibição (DD/MM/AAAA)
 export function formatBirthDateForDisplay(dateStr?: string): string {
   if (!dateStr) return '';
-  if (dateStr.includes('/')) return dateStr;
-  if (dateStr.includes('-')) {
-    const parts = dateStr.split('-');
-    if (parts.length === 3 && parts[0].length === 4) {
-      return `${parts[2]}/${parts[1]}/${parts[0]}`;
-    }
+  const extracted = extractBirthDate(dateStr);
+  if (extracted) {
+    return extracted.formatted;
   }
   return dateStr;
 }
@@ -169,12 +312,12 @@ Depois que o mapa for elaborado, informações incorretas podem comprometer a pr
 Os dados estão corretos?`;
 }
 
-// Extrator flexível de data de nascimento no texto
+// Extrator flexível e determinístico de data de nascimento no texto
 export function extractBirthDate(text: string): ExtractedBirthDate | null {
-  if (!text) return null;
+  if (!text || typeof text !== 'string') return null;
 
   // Pattern 1: Mês por extenso / abreviado (ex: "20 de março de 1990", "20 mar 1990", "20 de março de 90")
-  const monthNamesRegex = /\b(\d{1,2})\s*(?:de\s*)?(janeiro|jan|fevereiro|fev|março|marco|mar|abril|abr|maio|mai|junho|jun|julho|jul|agosto|ago|setembro|set|outubro|out|novembro|nov|dezembro|dez)\s*(?:de\s*)?(\d{2,4})\b/i;
+  const monthNamesRegex = /\b(\d{1,2})\s*(?:de\s*|[\/\.\-\s])?(janeiro|jan|fevereiro|fev|março|marco|mar|abril|abr|maio|mai|junho|jun|julho|jul|agosto|ago|setembro|set|outubro|out|novembro|nov|dezembro|dez)\s*(?:de\s*|[\/\.\-\s])?(\d{2,4})\b/i;
   const monthMatch = text.match(monthNamesRegex);
 
   if (monthMatch) {
@@ -191,15 +334,41 @@ export function extractBirthDate(text: string): ExtractedBirthDate | null {
       const dayPadded = String(day).padStart(2, '0');
       const monthPadded = String(month).padStart(2, '0');
       return {
+        day,
+        month,
+        year,
         formatted: `${dayPadded}/${monthPadded}/${year}`,
         iso: `${year}-${monthPadded}-${dayPadded}`,
-        isValid,
+        isValid: Boolean(isValid),
         originalMatchedStr: monthMatch[0]
       };
     }
   }
 
-  // Pattern 2: Data numérica com barras, pontos, traços ou ESPAÇOS (ex: "20 03 1990", "20/03/1990", "20-03-90")
+  // Pattern 2: Formato ISO (ex: "1990-03-20" ou "1990/03/20" ou "1990.03.20")
+  const isoRegex = /\b(\d{4})[\/\.\-\s]+(\d{1,2})[\/\.\-\s]+(\d{1,2})\b/;
+  const isoMatch = text.match(isoRegex);
+
+  if (isoMatch) {
+    const year = parseInt(isoMatch[1], 10);
+    const month = parseInt(isoMatch[2], 10);
+    const day = parseInt(isoMatch[3], 10);
+
+    const isValid = isValidCalendarDate(day, month, year);
+    const dayPadded = String(day).padStart(2, '0');
+    const monthPadded = String(month).padStart(2, '0');
+    return {
+      day,
+      month,
+      year,
+      formatted: `${dayPadded}/${monthPadded}/${year}`,
+      iso: `${year}-${monthPadded}-${dayPadded}`,
+      isValid: Boolean(isValid),
+      originalMatchedStr: isoMatch[0]
+    };
+  }
+
+  // Pattern 3: Data numérica com barras, pontos, traços ou ESPAÇOS (ex: "20 03 1990", "20/03/1990", "20-03-1990", "20.03.1990", "20-03-90")
   const numericRegex = /\b(\d{1,2})[\/\.\-\s]+(\d{1,2})[\/\.\-\s]+(\d{2,4})\b/;
   const numMatch = text.match(numericRegex);
 
@@ -225,32 +394,40 @@ export function extractBirthDate(text: string): ExtractedBirthDate | null {
       const dayPadded = String(day).padStart(2, '0');
       const monthPadded = String(month).padStart(2, '0');
       return {
+        day,
+        month,
+        year,
         formatted: `${dayPadded}/${monthPadded}/${year}`,
         iso: `${year}-${monthPadded}-${dayPadded}`,
-        isValid,
+        isValid: Boolean(isValid),
         originalMatchedStr: numMatch[0]
       };
     }
   }
 
-  // Pattern 3: Formato ISO (ex: "1990-03-20" ou "1990/03/20")
-  const isoRegex = /\b(\d{4})[\/\.\-\s]+(\d{1,2})[\/\.\-\s]+(\d{1,2})\b/;
-  const isoMatch = text.match(isoRegex);
+  // Pattern 4: Formato compacto de 8 dígitos sem separadores (ex: "20031990")
+  const compactRegex = /\b(\d{2})(\d{2})(\d{4})\b/;
+  const compactMatch = text.match(compactRegex);
 
-  if (isoMatch) {
-    const year = parseInt(isoMatch[1], 10);
-    const month = parseInt(isoMatch[2], 10);
-    const day = parseInt(isoMatch[3], 10);
+  if (compactMatch) {
+    const day = parseInt(compactMatch[1], 10);
+    const month = parseInt(compactMatch[2], 10);
+    const year = parseInt(compactMatch[3], 10);
 
-    const isValid = isValidCalendarDate(day, month, year);
-    const dayPadded = String(day).padStart(2, '0');
-    const monthPadded = String(month).padStart(2, '0');
-    return {
-      formatted: `${dayPadded}/${monthPadded}/${year}`,
-      iso: `${year}-${monthPadded}-${dayPadded}`,
-      isValid,
-      originalMatchedStr: isoMatch[0]
-    };
+    if (month >= 1 && month <= 12 && day >= 1 && day <= 31) {
+      const isValid = isValidCalendarDate(day, month, year);
+      const dayPadded = String(day).padStart(2, '0');
+      const monthPadded = String(month).padStart(2, '0');
+      return {
+        day,
+        month,
+        year,
+        formatted: `${dayPadded}/${monthPadded}/${year}`,
+        iso: `${year}-${monthPadded}-${dayPadded}`,
+        isValid: Boolean(isValid),
+        originalMatchedStr: compactMatch[0]
+      };
+    }
   }
 
   return null;
@@ -328,6 +505,19 @@ export function extractFullName(text: string, birthDateMatchStr?: string): strin
 
   // Se nenhuma introdução explícita casou, isola o primeiro segmento de frase
   if (!hasExplicitIntro) {
+    const normClean = cleanText.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    const conversationalMarkers = [
+      'queria', 'quero', 'gostaria', 'posso', 'pode', 'como', 'porque', 'por que', 'porq', 'pq',
+      'voce', 'você', 'estou', 'tenho', 'alguem', 'alguém', 'humano', 'atendente', 'pessoa',
+      'ia', 'robo', 'robô', 'inteligencia', 'inteligência', 'repetidas', 'repetindo', 'repetir',
+      'coisas', 'responde', 'falar', 'verdade', 'funciona', 'custa', 'medo', 'perder', 'dinheiro',
+      'duvida', 'dúvida', 'ajuda', 'suporte', 'atendimento', 'so', 'só'
+    ];
+
+    if (conversationalMarkers.some(m => normClean.includes(m))) {
+      return null;
+    }
+
     let firstCut = cleanText;
     for (const sep of clauseSeparators) {
       const idx = firstCut.search(sep);
@@ -401,6 +591,14 @@ export function extractFullName(text: string, birthDateMatchStr?: string): strin
 // Respostas para perguntas frequentes e dúvidas do Kael
 const FAQ_ANSWERS: { keywords: string[]; response: string }[] = [
   {
+    keywords: ['medo de perder', 'medo de pagar', 'perder meu dinheiro', 'perder dinheiro', 'to com medo', 'estou com medo', 'tenho medo', 'com medo', 'receio de pagar', 'paguei e nao', 'golpe', 'fraude', 'seguro pagar'],
+    response: 'Compreendo perfeitamente o seu receio. O valor de R$ 15,00 é processado com total segurança via PIX, e o seu Mapa Numerológico Cabalístico em PDF é elaborado e disponibilizado diretamente aqui nesta conversa logo após a confirmação.'
+  },
+  {
+    keywords: ['confiavel', 'confiável', 'posso confiar', 'e confiavel', 'é confiável', 'e seguro', 'é seguro', 'garantia'],
+    response: 'É uma pergunta totalmente legítima. O Mapa Numerológico Cabalístico é uma ferramenta de autoconhecimento e interpretação baseada nos cálculos tradicionais dos números do seu nome e data de nascimento. Ele não possui comprovação científica nem prevê o futuro com garantias exatas, mas oferece reflexões valiosas e clareza sobre suas tendências e potenciais.'
+  },
+  {
     keywords: ['funciona mesmo', 'funciona de verdade', 'funciona de fato', 'em duvida se funciona', 'em dúvida se funciona', 'sera que funciona', 'será que funciona', 'funciona'],
     response: 'É uma dúvida válida. A Numerologia Cabalística é uma prática de interpretação e autoconhecimento, e não um método científico comprovado. O mapa utiliza cálculos baseados no nome e na data de nascimento e apresenta interpretações dentro dessa tradição.'
   },
@@ -430,7 +628,7 @@ const FAQ_ANSWERS: { keywords: string[]; response: string }[] = [
   },
   {
     keywords: ['quanto tempo', 'demora', 'prazo', 'demora muito'],
-    response: 'Depois que o pagamento for confirmed, o mapa é elaborado e o PDF é disponibilizado por aqui.'
+    response: 'Depois que o pagamento for confirmado, o mapa é elaborado e o PDF é disponibilizado por aqui.'
   },
   {
     keywords: ['como recebo', 'como eu recebo', 'como vou receber', 'envia por onde', 'onde recebo'],
@@ -479,6 +677,14 @@ const FAQ_ANSWERS: { keywords: string[]; response: string }[] = [
   {
     keywords: ['nome completo', 'o que e nome completo', 'o que é nome completo', 'significa nome completo'],
     response: 'Nome completo de nascimento é o nome registrado na sua certidão de nascimento original, exatamente como foi registrado pelos seus pais (sem abreviações).'
+  },
+  {
+    keywords: ['confiavel', 'confiável', 'confiar', 'funciona mesmo', 'e seguro', 'é seguro', 'garantia'],
+    response: 'O Mapa Numerológico Cabalístico é uma ferramenta de autoconhecimento e interpretação sobre seus padrões, potenciais e ciclos com base na tradição dos números. Não é um método científico nem prevê o futuro com garantias exatas, mas oferece reflexões valiosas e clareza sobre suas tendências.'
+  },
+  {
+    keywords: ['medo', 'receio', 'perder meu dinheiro', 'perder dinheiro', 'preocupado com o pagamento', 'preocupada com o pagamento', 'segurança do pagamento', 'nao receber', 'não receber', 'golpe', 'fraude'],
+    response: 'Compreendo perfeitamente o seu receio. O valor promocional de R$ 15,00 é processado com total segurança via PIX, e o seu Mapa Numerológico Cabalístico em PDF é elaborado e disponibilizado diretamente aqui nesta conversa logo após a confirmação do pagamento.'
   }
 ];
 
@@ -495,9 +701,145 @@ export function answerSpontaneousQuestion(userText: string): string | null {
   return null;
 }
 
+export interface GreetingDetectionResult {
+  hasGreeting: boolean;
+  greetingType: 'bom_dia' | 'boa_tarde' | 'boa_noite' | 'tudo_bem' | 'generic' | null;
+  greetingPhrase: string | null;
+  greetingTextToSpeak: string | null;
+  cleanText: string;
+}
+
+export function detectAndExtractGreeting(text: string): GreetingDetectionResult {
+  const trimmed = text.trim();
+  const cleanedLeading = trimmed.replace(/^[\s,.\-!😊:]+/, '');
+
+  const patterns: { regex: RegExp; type: GreetingDetectionResult['greetingType']; textToSpeak: string }[] = [
+    { regex: /^(oi|ola|olá|oie)?\s*([,\.-]?\s*)?(boa tarde|boa-tarde)/i, type: 'boa_tarde', textToSpeak: 'Boa tarde! 😊' },
+    { regex: /^(oi|ola|olá|oie)?\s*([,\.-]?\s*)?(bom dia|bom-dia)/i, type: 'bom_dia', textToSpeak: 'Bom dia! 😊' },
+    { regex: /^(oi|ola|olá|oie)?\s*([,\.-]?\s*)?(boa noite|boa-noite)/i, type: 'boa_noite', textToSpeak: 'Boa noite! 😊' },
+    { regex: /^(oi|ola|olá|oie)?\s*([,\.-]?\s*)?(tudo bem|tudo bom|tudo certo)/i, type: 'tudo_bem', textToSpeak: 'Oi! Tudo bem por aqui 😊' },
+    { regex: /^(oi|oie|ola|olá|salve|e ai|e aí)\b/i, type: 'generic', textToSpeak: 'Olá! 😊' }
+  ];
+
+  for (const item of patterns) {
+    const match = cleanedLeading.match(item.regex);
+    if (match) {
+      const matchedStr = match[0];
+      let clean = cleanedLeading.slice(matchedStr.length).trim();
+      clean = clean.replace(/^[,\.\!\?\:\;\-–\s]+/, '').trim();
+
+      const hasAlphaNum = /[a-zA-Z0-9]/.test(clean);
+      if (!hasAlphaNum) {
+        clean = '';
+      }
+
+      return {
+        hasGreeting: true,
+        greetingType: item.type,
+        greetingPhrase: matchedStr,
+        greetingTextToSpeak: item.textToSpeak,
+        cleanText: clean
+      };
+    }
+  }
+
+  return {
+    hasGreeting: false,
+    greetingType: null,
+    greetingPhrase: null,
+    greetingTextToSpeak: null,
+    cleanText: trimmed
+  };
+}
+
+export function buildPureGreetingResponse(greetingPrefix: string, session: KaelSession): string {
+  if (session.subState === 'CORRIGINDO_NOME') {
+    return `${greetingPrefix} Podemos continuar. Por favor, me informe o seu nome completo de nascimento correto.`;
+  }
+  if (session.subState === 'CORRIGINDO_DATA') {
+    return `${greetingPrefix} Podemos continuar. Por favor, me informe a sua data de nascimento correta (DD/MM/AAAA).`;
+  }
+  if (session.subState === 'AGUARDANDO_QUAL_DADO') {
+    return `${greetingPrefix} Podemos continuar. Qual dado você deseja corrigir: o seu nome completo ou a sua data de nascimento?`;
+  }
+
+  switch (session.currentState) {
+    case 'PRIMEIRO_CONTATO':
+    case 'AGUARDANDO_NOME_DATA': {
+      if (!session.fullName && !session.birthDate) {
+        if (!session.presentationAlreadyMade) {
+          return `${greetingPrefix} Seja muito bem-vindo(a)! Para começarmos, me envie seu nome completo de nascimento e a sua data de nascimento (DD/MM/AAAA).`;
+        }
+        return `${greetingPrefix} Que bom receber você por aqui. Para darmos início, por favor me envie o seu nome completo de nascimento e a sua data de nascimento (DD/MM/AAAA).`;
+      } else if (!session.fullName) {
+        const formattedDate = formatBirthDateForDisplay(session.birthDate);
+        return `${greetingPrefix} Recebi a sua data de nascimento (${formattedDate}). Agora, por favor, me informe o seu nome completo de nascimento (com acentos e sem abreviações).`;
+      } else if (!session.birthDate) {
+        return `${greetingPrefix} Recebi o seu nome (${session.fullName}). Agora, por favor, me informe a sua data de nascimento no formato DD/MM/AAAA.`;
+      }
+      return `${greetingPrefix} Para darmos início, por favor me envie o seu nome completo de nascimento e a sua data de nascimento (DD/MM/AAAA).`;
+    }
+
+    case 'CONFIRMACAO_DOS_DADOS': {
+      const formattedDate = formatBirthDateForDisplay(session.birthDate);
+      return `${greetingPrefix} Podemos continuar. Você pode me confirmar se os dados abaixo estão corretos?\n\nNome completo de nascimento: ${session.fullName || ''}\nData de nascimento: ${formattedDate || ''}\n\nOs dados estão corretos?`;
+    }
+
+    case 'AGUARDANDO_PAGAMENTO': {
+      return `${greetingPrefix} Podemos continuar. Seus dados já foram confirmados! O valor promocional do seu Mapa Numerológico é de R$ 15,00. Posso te orientar sobre o pagamento por PIX (chave: pagamento@mapacabalistico.com.br).`;
+    }
+
+    case 'MAPA_EM_PROCESSAMENTO': {
+      return `${greetingPrefix} O seu mapa já está sendo elaborado no momento. Em breve o PDF estará disponível diretamente nesta conversa!`;
+    }
+
+    case 'POS_VENDA':
+    case 'PDF_PRONTO': {
+      return `${greetingPrefix} Como posso te ajudar com o seu Mapa Numerológico hoje?`;
+    }
+
+    case 'CONVERSA_ENCERRADA': {
+      return `${greetingPrefix} Que bom ter você de volta! Se desejar fazer o seu Mapa Numerológico Cabalístico, me avise para darmos início.`;
+    }
+
+    default: {
+      return `${greetingPrefix} Como posso te ajudar hoje?`;
+    }
+  }
+}
+
 // Servico de Interpretacao Semantica da Mensagem do Cliente (NLU)
 export async function interpretClientMessage(
   userText: string,
+  currentState: KaelState,
+  session: KaelSession,
+  aiAnswerFn?: (prompt: string) => Promise<string>
+): Promise<ClientInterpretation> {
+  const greetingInfo = detectAndExtractGreeting(userText);
+
+  if (greetingInfo.hasGreeting && greetingInfo.cleanText === '') {
+    return {
+      intent: 'GREETING',
+      fullName: null,
+      birthDate: null,
+      confidence: 0.99,
+      greetingTextToSpeak: greetingInfo.greetingTextToSpeak
+    };
+  }
+
+  const textToAnalyze = greetingInfo.cleanText || userText;
+  const result = await _interpretClientMessageCore(textToAnalyze, userText, currentState, session, aiAnswerFn);
+
+  if (greetingInfo.hasGreeting) {
+    result.greetingTextToSpeak = greetingInfo.greetingTextToSpeak;
+  }
+
+  return result;
+}
+
+async function _interpretClientMessageCore(
+  userText: string,
+  rawUserText: string,
   currentState: KaelState,
   session: KaelSession,
   aiAnswerFn?: (prompt: string) => Promise<string>
@@ -517,62 +859,83 @@ export async function interpretClientMessage(
 
       const classificationPrompt = `Você é o interpretador de linguagem natural e inteligência conversacional (NLU) do assistente Kael.
 
+SUA MISSÃO CRÍTICA:
+Analisar a MENSAGEM DO CLIENTE considerando o HISTÓRICO, o ESTADO ATUAL e os DADOS JÁ CADASTRADOS para identificar a INTENÇÃO REAL do cliente e determinar se ele está FORNECENDO DADOS, FAZENDO UMA PERGUNTA, EXPRESSANDO PREOCUPAÇÃO/MEDO, SOLICITANDO ATENDIMENTO HUMANO, CHECANDO SE É IA, EXPRESSANDO FRUSTRAÇÃO, SOLICITANDO CORREÇÃO, REINICIANDO OU APENAS CONVERSANDO.
+
 HISTÓRICO RECENTE DA CONVERSA:
 ${historySnippet}
 
 ESTADO ATUAL DA CONVERSA: ${currentState}
 DADOS JÁ CADASTRADOS NA SESSÃO:
-- Nome: "${session.fullName || 'nenhum'}"
-- Data de Nascimento: "${session.birthDate || 'nenhuma'}"
+- Nome completo: "${session.fullName || 'nenhum'}"
+- Data de nascimento: "${session.birthDate || 'nenhuma'}"
 
 MENSAGEM RECEBIDA DO CLIENTE: "${userText}"
 
-Sua tarefa é CLASSIFICAR A INTENÇÃO REAL do cliente considerando o HISTÓRICO, o ESTADO e a MENSAGEM ATUAL.
+==================================================
+REGRAS FUNDAMENTAIS DE INTERPRETAÇÃO:
+1. NUNCA extraia nome de frases de conversa, pergunta, apoio humano, verificação de IA, frustração, medo, dúvida, objeção ou preço.
+   Exemplos que NUNCA SÃO NOME (fullName MUST BE null):
+   - "queria falar com alguém de verdade" -> intent: HUMAN_SUPPORT_REQUEST, fullName: null!
+   - "você é uma IA?" -> intent: AI_IDENTITY, fullName: null!
+   - "PORQUE SÓ RESPONDE COISAS REPETIDAS?" -> intent: USER_FRUSTRATION, fullName: null!
+   - "tô com medo de perder meu dinheiro" -> intent: FINANCIAL_CONCERN_OR_OBJECTION, fullName: null!
+   - "oi tudo bem?" -> intent: GREETING, fullName: null!
+   - "isso funciona?" -> intent: QUESTION, fullName: null!
+   - "quanto custa?" -> intent: PAYMENT_QUESTION, fullName: null!
 
-HIERARQUIA E LISTA DE INTENÇÕES:
-1. REQUEST_RESET ou REQUEST_RESTART: Cliente quer reiniciar a conversa do zero, resetar, apagar tudo, recomeçar, voltar para o começo, voltar para as primeiras mensagens.
-2. REQUEST_CHANGE_DATA ou CORRECTION: Cliente diz que o nome ou data está errado ("meu nome está errado. É Gabriel Braga Silva", "mandei o nome errado", "quero corrigir o nome", "está errado").
-3. COMPLAINT ou CONFUSION: Cliente demonstra irritação ou reclama que o assistente não entendeu ("você não entende?", "você tá repetindo", "não foi isso que falei").
-4. REQUEST_CANCEL, NO_PURCHASE ou NEGATION: Recusa ou cancelamento ("não quero comprar agora", "cancelar", "desisto").
-5. GOODBYE: Despedida ("tchau", "adeus").
-6. PAYMENT_CLAIM: Afirmação de pagamento ("paguei", "fiz o pix", "mandei o comprovante").
-7. AFFIRMATION ou CONFIRMATION: Confirmação positiva ("sim", "está correto", "tudo certo", "pode continuar", "confirmo").
-8. QUESTION ou PAYMENT_QUESTION: Dúvidas sobre preço, conteúdo, se fala de relacionamento, se pode fazer pra mãe, quanto tempo demora.
-9. CLARIFICATION: Esclarecimentos ("meu nome não tem acento", "o que é nome completo").
-10. PURCHASE_INTENT: Intenção de compra ("quero fazer", "como faço pra pedir").
-11. NAME, BIRTH_DATE, NAME_AND_BIRTH_DATE: Fornecimento direto de dados.
-12. GREETING: Cumprimento ("olá", "bom dia").
-13. OFF_TOPIC ou UNCLEAR: Não compreendido.
+2. EXTRAÇÃO DE NOME: Somente extraia nome se houver evidência clara de que o usuário está informando seu nome real (ex: "meu nome é José Pinheiro Junior", "José Pinheiro Junior", "me chamo Gabriel Braga Silva").
 
-REGRAS RÍGIDAS DE EXTRAÇÃO:
-- NUNCA extraia nome ou data se a intenção for QUESTION, CLARIFICATION, COMPLAINT, PAYMENT_QUESTION, REQUEST_RESET, REQUEST_RESTART, AFFIRMATION, NEGATION, NO_PURCHASE, PAYMENT_CLAIM, OFF_TOPIC.
-- Se o cliente solicitar reset ("vamos resetar", "volte para as primeiras mensagens"), classifique estritamente como REQUEST_RESET ou REQUEST_RESTART.
-- Se o cliente disser "Meu nome está errado. É Gabriel Braga Silva", classifique como REQUEST_CHANGE_DATA ou CORRECTION e extraia fullName = "Gabriel Braga Silva".
+3. EXTRAÇÃO DE DATA: Somente extraia data se houver evidência clara de que o usuário está informando sua data de nascimento (ex: "20/03/1990", "nasci em 20 de março de 1990", "20 03 1990").
 
-Responda EXCLUSIVAMENTE em formato JSON puro com esta estrutura:
+4. PROTEÇÃO DE DADOS CONFIRMADOS: Se já existe um nome e data confirmados na sessão, mensagens genéricas (perguntas, objeções, preocupações) JAMAIS podem alterar o nome ou a data. A alteração só deve ocorrer se houver intenção explícita de correção ("meu nome está errado", "o nome correto é...", "quero corrigir").
+
+5. MENSAGENS MISTAS: Se a mensagem contiver fornecimento de dados E também uma pergunta (ex: "Meu nome é Gabriel, nasci em 18/06/1996 e queria saber se o mapa fala sobre profissão"), marque isProvidingName: true, isProvidingBirthDate: true, isQuestion: true, e capture fullName, birthDateFormatted e a orientação de resposta.
+
+6. DÚVIDAS E PREOCUPAÇÕES:
+   - Para "você é uma IA?": Responder honestamente que é o Kael, assistente virtual criado para o Mapa Numerológico Cabalístico.
+   - Para "PORQUE SÓ RESPONDE COISAS REPETIDAS?": Reconhecer a falha, pedir desculpas pela repetição e responder ao contexto.
+   - Para "queria falar com alguém de verdade": Explicar que o atendimento e elaboração são 100% digitais diretamente com o Kael no chat.
+   - Para "tô com medo de perder meu dinheiro": Reconhecer o receio, explicar que o PIX de R$ 15,00 é processado com segurança e o PDF é entregue no chat logo após a confirmação.
+
+7. HIERARQUIA DE INTENÇÕES:
+   - REQUEST_RESET / REQUEST_RESTART: "resetar", "começar do zero", "apagar tudo", "comece tudo de novo".
+   - CORRECTION / REQUEST_CHANGE_DATA: "meu nome está errado", "corrigir a data", "o correto é...".
+   - AI_IDENTITY: "você é uma IA?", "estou falando com um robô?", "é humano?".
+   - USER_FRUSTRATION: "PORQUE SÓ RESPONDE COISAS REPETIDAS?", "você só repete".
+   - HUMAN_SUPPORT_REQUEST: "queria falar com alguém de verdade", "quero um humano", "atendente".
+   - FINANCIAL_CONCERN_OR_OBJECTION: "tô com medo de perder dinheiro", "tenho receio".
+   - GREETING: "oi", "olá", "oi tudo bem?", "bom dia", "boa tarde".
+   - QUESTION / PAYMENT_QUESTION: "isso funciona?", "quanto custa?", "como funciona?".
+   - AFFIRMATION / CONFIRMATION: "sim", "está correto", "pode continuar", "confirmo".
+   - NAME / BIRTH_DATE / NAME_AND_BIRTH_DATE: Fornecimento direto de dados reais.
+
+Responda EXCLUSIVAMENTE em formato JSON puro com esta estrutura exata:
 {
-  "intent": "REQUEST_RESET" | "REQUEST_RESTART" | "REQUEST_CHANGE_DATA" | "CORRECTION" | "COMPLAINT" | "CONFUSION" | "REQUEST_CANCEL" | "NO_PURCHASE" | "GOODBYE" | "PAYMENT_CLAIM" | "AFFIRMATION" | "CONFIRMATION" | "QUESTION" | "PAYMENT_QUESTION" | "CLARIFICATION" | "PURCHASE_INTENT" | "NAME" | "BIRTH_DATE" | "NAME_AND_BIRTH_DATE" | "GREETING" | "OFF_TOPIC" | "UNCLEAR",
+  "intent": "REQUEST_RESET" | "REQUEST_RESTART" | "REQUEST_CHANGE_DATA" | "CORRECTION" | "AI_IDENTITY" | "USER_FRUSTRATION" | "HUMAN_SUPPORT_REQUEST" | "FINANCIAL_CONCERN_OR_OBJECTION" | "COMPLAINT" | "CONFUSION" | "REQUEST_CANCEL" | "NO_PURCHASE" | "GOODBYE" | "PAYMENT_CLAIM" | "AFFIRMATION" | "CONFIRMATION" | "QUESTION" | "PAYMENT_QUESTION" | "CLARIFICATION" | "PURCHASE_INTENT" | "NAME" | "BIRTH_DATE" | "NAME_AND_BIRTH_DATE" | "GREETING" | "OFF_TOPIC" | "UNCLEAR",
+  "confidence": 0.95,
+  "isProvidingName": boolean,
+  "isProvidingBirthDate": boolean,
+  "isCorrectingData": boolean,
+  "isConfirmation": boolean,
+  "isQuestion": boolean,
+  "isConcern": boolean,
+  "needsHumanSupport": boolean,
   "fullName": string ou null,
   "birthDateFormatted": string ou null,
   "birthDateISO": string ou null,
-  "explanation": "motivo curto"
+  "explanation": "motivo curto da decisão",
+  "responseGuidance": "orientação ou resposta sugerida para a pergunta/preocupação"
 }`;
 
       const aiResponse = await aiAnswerFn(classificationPrompt);
-      console.log(`[KAEL NLU LOG] 2. RESULTADO DA IA (RAW):`, aiResponse);
+      console.log(`[KAEL NLU LOG] 3. RESULTADO RAW DO GEMINI:`, aiResponse);
 
       const cleanJson = aiResponse.replace(/```json/gi, '').replace(/```/g, '').trim();
       const parsed = JSON.parse(cleanJson);
-      console.log(`[KAEL NLU LOG] 3. OBJETO PARSEADO DA IA:`, parsed);
+      console.log(`[KAEL NLU LOG] 4. JSON PARSEADO:`, parsed);
 
       if (parsed && parsed.intent) {
-        const nonDataIntents: MessageIntent[] = [
-          'REQUEST_RESET', 'REQUEST_RESTART', 'COMPLAINT', 'CONFUSION',
-          'REQUEST_CANCEL', 'NO_PURCHASE', 'GOODBYE', 'CLARIFICATION',
-          'QUESTION', 'PAYMENT_QUESTION', 'AFFIRMATION', 'CONFIRMATION',
-          'NEGATION', 'PAYMENT_CLAIM', 'OFF_TOPIC', 'GREETING', 'UNCLEAR'
-        ];
-
         let extractedDate: ExtractedBirthDate | null = null;
 
         // Validação determinística de qualquer data extraída pela IA ou presente no texto do usuário
@@ -587,27 +950,57 @@ Responda EXCLUSIVAMENTE em formato JSON puro com esta estrutura:
         }
 
         let finalIntent = parsed.intent as MessageIntent;
-        // Se a IA marcou INVALID_DATE mas o extrator encontrou uma data VÁLIDA real, corrige a intenção
-        if (extractedDate && extractedDate.isValid && finalIntent === 'INVALID_DATE') {
+        // Se a IA marcou INVALID_DATE, UNCLEAR ou OFF_TOPIC mas o extrator encontrou uma data VÁLIDA real, corrige a intenção
+        if (extractedDate && extractedDate.isValid && (finalIntent === 'INVALID_DATE' || finalIntent === 'UNCLEAR' || finalIntent === 'OFF_TOPIC')) {
           finalIntent = parsed.fullName ? 'NAME_AND_BIRTH_DATE' : 'BIRTH_DATE';
         }
 
         let finalFullName = parsed.fullName || null;
-        if (nonDataIntents.includes(finalIntent) && finalIntent !== 'CORRECTION' && finalIntent !== 'REQUEST_CHANGE_DATA') {
+        if (!finalFullName) {
+          const possibleName = extractFullName(userText, extractedDate?.formatted);
+          if (possibleName && isValidCandidateName(possibleName, userText, currentState, session)) {
+            finalFullName = possibleName;
+          }
+        } else {
+          if (!isValidCandidateName(finalFullName, userText, currentState, session)) {
+            console.log(`[KAEL NLU LOG] Candidate fullName "${finalFullName}" REJECTED by isValidCandidateName validation.`);
+            finalFullName = null;
+          }
+        }
+
+        const isProvidingName = Boolean(parsed.isProvidingName || finalFullName);
+        const isProvidingBirthDate = Boolean(parsed.isProvidingBirthDate || (extractedDate && extractedDate.isValid));
+        const isCorrectingData = Boolean(parsed.isCorrectingData || finalIntent === 'CORRECTION' || finalIntent === 'REQUEST_CHANGE_DATA');
+        const isConfirmation = Boolean(parsed.isConfirmation || finalIntent === 'CONFIRMATION' || finalIntent === 'AFFIRMATION');
+        const isQuestion = Boolean(parsed.isQuestion || finalIntent === 'QUESTION' || finalIntent === 'PAYMENT_QUESTION');
+        const isConcern = Boolean(parsed.isConcern || finalIntent === 'COMPLAINT' || finalIntent === 'CONFUSION');
+
+        // Se não houver fornecimento explícito de nome/data nem correção, zera campos de dados
+        if (!isProvidingName && !isCorrectingData) {
           finalFullName = null;
+        }
+        if (!isProvidingBirthDate && !isCorrectingData && (!extractedDate || !extractedDate.isValid)) {
           extractedDate = null;
         }
 
-        console.log(`[KAEL NLU LOG] 4. birthDate EXTRAÍDO:`, extractedDate);
-        console.log(`[KAEL NLU LOG] 5. isValid:`, extractedDate?.isValid);
-        console.log(`[KAEL NLU LOG] 6. INTENT FINAL:`, finalIntent);
+        console.log(`[KAEL NLU LOG] 5. DATA EXTRAÍDA:`, extractedDate);
+        console.log(`[KAEL NLU LOG] 6. DATA NORMALIZADA:`, extractedDate ? extractedDate.formatted : null);
+        console.log(`[KAEL NLU LOG] 7. isValid:`, extractedDate ? extractedDate.isValid : false);
+        console.log(`[KAEL NLU LOG] 8. INTENÇÃO FINAL: ${finalIntent}`);
 
         return {
           intent: finalIntent,
           fullName: finalFullName,
           birthDate: extractedDate,
           explanation: parsed.explanation || '',
-          confidence: 0.95
+          confidence: parsed.confidence || 0.95,
+          isProvidingName,
+          isProvidingBirthDate,
+          isCorrectingData,
+          isConfirmation,
+          isQuestion,
+          isConcern,
+          responseGuidance: parsed.responseGuidance || ''
         };
       }
     } catch (err) {
@@ -635,7 +1028,62 @@ Responda EXCLUSIVAMENTE em formato JSON puro com esta estrutura:
     return { intent: 'REQUEST_RESET', fullName: null, birthDate: null, confidence: 0.99 };
   }
 
-  // B. Solicitação de Correção / Mudança de Dados (REQUEST_CHANGE_DATA / CORRECTION)
+  // A2. Permissão para perguntar (ASK_PERMISSION_TO_ASK)
+  const askPermissionPhrases = [
+    'posso tirar uma duvida', 'posso tirar uma dúvida',
+    'posso tirar duvida', 'posso tirar dúvida',
+    'posso fazer uma pergunta', 'posso fazer uma duvida', 'posso fazer uma dúvida',
+    'posso perguntar uma coisa', 'posso perguntar algo', 'posso perguntar',
+    'tenho uma duvida', 'tenho uma dúvida', 'tenho uma pergunta',
+    'queria tirar uma duvida', 'queria tirar uma dúvida',
+    'queria fazer uma pergunta', 'uma duvida antes', 'uma dúvida antes'
+  ];
+  if (askPermissionPhrases.some(phrase => normalized.includes(phrase))) {
+    return { intent: 'ASK_PERMISSION_TO_ASK', fullName: null, birthDate: null, confidence: 0.99, isQuestion: true };
+  }
+
+  // B1. Correção Específica de Nome (CORRECT_NAME / NAME_CORRECTION)
+  const nameCorrectionKeywords = [
+    'o nome', 'meu nome', 'mudar o nome', 'corrigir o nome', 'mudar meu nome',
+    'corrigir meu nome', 'alterar o nome', 'alterar meu nome', 'o nome esta errado', 'o nome está errado',
+    'meu nome esta errado', 'meu nome está errado', 'errei o nome', 'errei meu nome',
+    'coloquei meu nome errado', 'coloquei o nome errado', 'mandei meu nome errado', 'mandei o nome errado',
+    'quero corrigir meu nome', 'quero mudar meu nome', 'preciso corrigir meu nome', 'escrevi meu nome errado',
+    'digitei meu nome errado', 'meu nome ta errado', 'meu nome tá errado', 'nome errado'
+  ];
+  const isExplicitNameCorrection = nameCorrectionKeywords.some(p => normalized === p || normalized.startsWith(p) || normalized.endsWith(p) || normalized.includes(p)) ||
+    ((session.subState === 'AGUARDANDO_QUAL_DADO' || currentState === 'CONFIRMACAO_DOS_DADOS') && (normalized === 'o nome' || normalized === 'nome' || normalized === 'meu nome'));
+
+  if (isExplicitNameCorrection) {
+    const tempDate = extractBirthDate(userText);
+    const tempName = extractFullName(userText, tempDate?.formatted);
+    if (tempName && tempName.toLowerCase() !== 'o nome' && tempName.toLowerCase() !== 'meu nome' && tempName.toLowerCase() !== 'nome' && isValidCandidateName(tempName, userText, currentState, session)) {
+      return { intent: 'REQUEST_CHANGE_DATA', fullName: tempName, birthDate: tempDate, confidence: 0.98 };
+    }
+    return { intent: 'CORRECT_NAME', fullName: null, birthDate: null, confidence: 0.99 };
+  }
+
+  // B2. Correção Específica de Data (CORRECT_DATE / DATE_CORRECTION)
+  const dateCorrectionKeywords = [
+    'a data', 'minha data', 'mudar a data', 'corrigir a data', 'mudar minha data',
+    'corrigir minha data', 'alterar a data', 'alterar minha data', 'a data esta errada', 'a data está errada',
+    'minha data esta errada', 'minha data está errada', 'errei a data', 'errei minha data',
+    'coloquei minha data errada', 'coloquei a data errada', 'mandei minha data errada', 'mandei a data errada',
+    'quero corrigir minha data', 'quero mudar minha data', 'preciso corrigir minha data', 'escrevi minha data errada',
+    'digitei minha data errada', 'minha data ta errada', 'minha data tá errada', 'data errada'
+  ];
+  const isExplicitDateCorrection = dateCorrectionKeywords.some(p => normalized === p || normalized.startsWith(p) || normalized.endsWith(p) || normalized.includes(p)) ||
+    ((session.subState === 'AGUARDANDO_QUAL_DADO' || currentState === 'CONFIRMACAO_DOS_DADOS') && (normalized === 'a data' || normalized === 'data' || normalized === 'minha data'));
+
+  if (isExplicitDateCorrection) {
+    const tempDate = extractBirthDate(userText);
+    if (tempDate) {
+      return { intent: 'REQUEST_CHANGE_DATA', fullName: null, birthDate: tempDate, confidence: 0.98 };
+    }
+    return { intent: 'CORRECT_DATE', fullName: null, birthDate: null, confidence: 0.99 };
+  }
+
+  // B3. Solicitação de Correção / Mudança de Dados Geral (REQUEST_CHANGE_DATA / CORRECTION)
   const correctionPhrases = [
     'mandei o nome errado', 'nome errado', 'data errada', 'mandei a data errada', 'dados errados',
     'mandei errado', 'digitei errado', 'escrevi errado', 'meu nome esta errado', 'meu nome está errado',
@@ -665,6 +1113,48 @@ Responda EXCLUSIVAMENTE em formato JSON puro com esta estrutura:
       birthDate: tempDate,
       confidence: 0.98
     };
+  }
+
+  // C1. Identidade de IA (AI_IDENTITY)
+  const aiIdentityKeywords = [
+    'voce e uma ia', 'você é uma ia', 'voce e ia', 'você é ia', 'voce e um robo', 'você é um robô',
+    'voce e robo', 'você é robô', 'voce e bot', 'você é bot', 'voce e humano', 'você é humano',
+    'e uma inteligencia artificial', 'é uma inteligência artificial', 'falando com um robo',
+    'falando com um robô', 'falando com uma ia', 'falando com uma pessoa', 'falando com um humano'
+  ];
+  if (aiIdentityKeywords.some(kw => normalized.includes(kw))) {
+    return { intent: 'AI_IDENTITY', fullName: null, birthDate: null, confidence: 0.99, isQuestion: true };
+  }
+
+  // C2. Frustração do Usuário (USER_FRUSTRATION)
+  const frustrationKeywords = [
+    'por que so responde', 'por que só responde', 'porque so responde', 'porque só responde',
+    'so responde coisas repetidas', 'só responde coisas repetidas', 'coisas repetidas',
+    'voce so repete', 'você só repete', 'por que repete', 'porque repete', 'so fala a mesma coisa',
+    'só fala a mesma coisa', 'resposta repetida', 'respostas repetidas', 'so responde a mesma'
+  ];
+  if (frustrationKeywords.some(kw => normalized.includes(kw))) {
+    return { intent: 'USER_FRUSTRATION', fullName: null, birthDate: null, confidence: 0.99, isConcern: true };
+  }
+
+  // C3. Solicitação de Atendimento Humano (HUMAN_SUPPORT_REQUEST)
+  const humanSupportKeywords = [
+    'falar com alguem de verdade', 'falar com alguém de verdade', 'queria falar com alguem',
+    'queria falar com alguém', 'quero falar com um humano', 'quero falar com uma pessoa',
+    'queria falar com um humano', 'queria falar com uma pessoa', 'atendente de verdade',
+    'pessoa de verdade', 'tem algum atendente', 'atendimento humano', 'alguem de verdade', 'alguém de verdade'
+  ];
+  if (humanSupportKeywords.some(kw => normalized.includes(kw))) {
+    return { intent: 'HUMAN_SUPPORT_REQUEST', fullName: null, birthDate: null, confidence: 0.99, needsHumanSupport: true };
+  }
+
+  // C4. Objeção ou Medo Financeiro (FINANCIAL_CONCERN_OR_OBJECTION)
+  const financialConcernKeywords = [
+    'medo de perder meu dinheiro', 'medo de perder dinheiro', 'com medo de perder',
+    'medo de pagar', 'receio de pagar', 'golpe', 'fraude', 'perder meu dinheiro', 'perder dinheiro'
+  ];
+  if (financialConcernKeywords.some(kw => normalized.includes(kw))) {
+    return { intent: 'FINANCIAL_CONCERN_OR_OBJECTION', fullName: null, birthDate: null, confidence: 0.99, isConcern: true };
   }
 
   // C. Reclamação / Frustração do Cliente (COMPLAINT / CONFUSION)
@@ -710,6 +1200,15 @@ Responda EXCLUSIVAMENTE em formato JSON puro com esta estrutura:
   const accentKeywords = ['acento', 'acentos', 'sem acento', 'nao tem acento', 'nao possui acento', 'sem acentos', 'o que e nome completo', 'o que é nome completo', 'eh o nome de batismo', 'é o nome de batismo'];
   if (accentKeywords.some(kw => normalized.includes(kw))) {
     return { intent: 'CLARIFICATION', fullName: null, birthDate: null, confidence: 0.99 };
+  }
+
+  // Respostas Ambíguas em CONFIRMACAO_DOS_DADOS (ex: "é...", "pode ser", "acho que sim", "talvez")
+  const ambiguousPhrases = [
+    'pode ser', 'é...', 'e...', 'acho que sim', 'talvez', 'deve estar',
+    'creio que sim', 'deve ser', 'acho que é', 'parece que sim', 'supostamente', 'quem sabe'
+  ];
+  if (currentState === 'CONFIRMACAO_DOS_DADOS' && ambiguousPhrases.some(ap => normalized.includes(ap))) {
+    return { intent: 'CLARIFICATION', fullName: null, birthDate: null, confidence: 0.95 };
   }
 
   // J. Afirmação / Confirmação Positiva (AFFIRMATION / CONFIRMATION)
@@ -810,9 +1309,7 @@ Responda EXCLUSIVAMENTE em formato JSON puro com esta estrutura:
   let extractedName = extractFullName(userText, extractedDate?.originalMatchedStr || extractedDate?.formatted);
 
   if (extractedName) {
-    const nameWords = extractedName.toLowerCase().split(/\s+/);
-    const validWords = nameWords.filter(w => !NON_NAME_WORDS.has(w));
-    if (validWords.length === 0) {
+    if (!isValidCandidateName(extractedName, userText, currentState, session)) {
       extractedName = null;
     }
   }
@@ -832,8 +1329,8 @@ Responda EXCLUSIVAMENTE em formato JSON puro com esta estrutura:
 
 // Retorna lembrete do estado atual para reancorar a conversa
 export function getStateAnchorPrompt(state: KaelState, session: KaelSession): string {
-  // Se o mapa já foi entregue ou está em pós-venda / suporte, não anexar lembretes comerciais
-  if (session.mapDelivered || state === 'POS_VENDA' || state === 'PDF_PRONTO') {
+  // Se o mapa já foi entregue, pós-venda, pergunta pendente ou em sub-estado de correção, não anexar lembretes automáticos
+  if (session.mapDelivered || state === 'POS_VENDA' || state === 'PDF_PRONTO' || session.pendingUserQuestion || session.subState) {
     return '';
   }
 
@@ -891,8 +1388,9 @@ export function analyzeMultiIntentMessage(
   const extractedDate = extractBirthDate(userText);
   let extractedName = extractFullName(userText, extractedDate?.formatted);
   if (extractedName) {
-    const words = extractedName.toLowerCase().split(/\s+/).filter(w => !NON_NAME_WORDS.has(w));
-    if (words.length === 0) extractedName = null;
+    if (!isValidCandidateName(extractedName, userText, session.currentState, session)) {
+      extractedName = null;
+    }
   }
 
   // Resets
@@ -1025,12 +1523,46 @@ export function createKaelSession(sessionId: string): KaelSession {
   return session;
 }
 
+// Helper de log estruturado do fluxo (Steps 9 a 12)
+function logFlowDecisionAndReturn(
+  initialState: KaelState,
+  decision: string,
+  session: KaelSession,
+  newMessages: KaelMessage[],
+  greetingTextToSpeak?: string | null
+): { updatedSession: KaelSession; newMessages: KaelMessage[] } {
+  if (greetingTextToSpeak && newMessages.length > 0) {
+    const firstMsg = newMessages[0];
+    const lowerText = firstMsg.text.trim().toLowerCase();
+    if (
+      !lowerText.startsWith('boa tarde') &&
+      !lowerText.startsWith('bom dia') &&
+      !lowerText.startsWith('boa noite') &&
+      !lowerText.startsWith('olá') &&
+      !lowerText.startsWith('ola') &&
+      !lowerText.startsWith('oi!') &&
+      !lowerText.startsWith('oi,')
+    ) {
+      firstMsg.text = `${greetingTextToSpeak} ${firstMsg.text.trim()}`;
+    }
+  }
+
+  const replyText = newMessages.map(m => m.text).join('\n\n');
+  console.log(`[KAEL FLOW LOG] 9. ESTADO ANTES: ${initialState}`);
+  console.log(`[KAEL FLOW LOG] 10. DECISÃO DO FLUXO: ${decision}`);
+  console.log(`[KAEL FLOW LOG] 11. RESPOSTA ENVIADA:\n"${replyText}"`);
+  console.log(`[KAEL FLOW LOG] 12. ESTADO DEPOIS: ${session.currentState}`);
+  console.log(`==================================================\n`);
+  return { updatedSession: session, newMessages };
+}
+
 // Processador principal de mensagens recebidas pelo Kael com Inteligência NLU
 export async function handleKaelUserMessage(
   session: KaelSession,
   userText: string,
   aiAnswerFn?: (prompt: string) => Promise<string>
 ): Promise<{ updatedSession: KaelSession; newMessages: KaelMessage[] }> {
+  const initialState = session.currentState;
   const now = new Date().toISOString();
   const trimmed = userText.trim();
   const normalized = trimmed.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
@@ -1116,7 +1648,7 @@ export async function handleKaelUserMessage(
     newMessages.push(msg1, msg2, msg3);
 
     session.currentState = 'AGUARDANDO_NOME_DATA';
-    return { updatedSession: session, newMessages };
+    return logFlowDecisionAndReturn(initialState, 'REQUEST_RESET / RESTART', session, newMessages);
   }
 
   // 1.4 DATA INVÁLIDA NO CALENDÁRIO
@@ -1272,17 +1804,22 @@ export async function handleKaelUserMessage(
   }
 
   // 1.9 MENSAGENS MISTAS DE DADOS + PERGUNTAS (ex: "Meu nome é Gabriel Braga Silva, nasci em 18/06/1996. Esse mapa fala de profissão? E sobre relacionamentos?")
-  if ((multi.extractedName || multi.extractedDate) && (multi.hasProfessionQuestion || multi.hasRelationshipsQuestion || multi.hasFinancesQuestion || multi.hasGeneralNumbersQuestion || multi.hasPriceQuestion)) {
-    if (multi.extractedName) {
-      session.fullName = multi.extractedName;
-    }
-    if (multi.extractedDate) {
-      session.birthDate = multi.extractedDate.iso;
-    }
+  const candidateName19 = interpretation.fullName || multi.extractedName;
+  const candidateDate19 = interpretation.birthDate || multi.extractedDate;
+
+  if (candidateName19 && isValidCandidateName(candidateName19, trimmed, session.currentState, session)) {
+    session.fullName = candidateName19;
+  }
+  if (candidateDate19) {
+    session.birthDate = candidateDate19.iso;
+  }
+
+  if (session.fullName && session.birthDate && (session.currentState === 'PRIMEIRO_CONTATO' || session.currentState === 'AGUARDANDO_NOME_DATA')) {
+    session.currentState = 'CONFIRMACAO_DOS_DADOS';
 
     const answers: string[] = [];
     if (multi.hasProfessionQuestion) {
-      answers.push('O Mapa Numerológico Cabalístico inclui uma análise completa do seu potencial profissional, vocações e caminhos de carreira.');
+      answers.push('Sim. A numerologia cabalística analisa seu potencial profissional, seus talentos de prosperidade e os melhores caminhos para sua carreira.');
     }
     if (multi.hasRelationshipsQuestion) {
       answers.push('O mapa também examina a sua área afetiva, dinâmicas de relacionamento e padrões de convivência.');
@@ -1293,23 +1830,23 @@ export async function handleKaelUserMessage(
     if (multi.hasPriceQuestion) {
       answers.push('O investimento promocional para a elaboração do mapa completo é R$ 15,00.');
     }
+    if (answers.length === 0 && interpretation.isQuestion) {
+      const qAns = answerSpontaneousQuestion(trimmed);
+      if (qAns) answers.push(qAns);
+    }
 
     let answerText = answers.join(' ');
-
-    if (session.fullName && session.birthDate) {
-      session.currentState = 'CONFIRMACAO_DOS_DADOS';
-      const promptText = getConfirmationPrompt(session.fullName, session.birthDate, false);
-      const fullText = answerText ? `${answerText}\n\n${promptText}` : promptText;
-      const replyMsg: KaelMessage = {
-        id: `kael-${Date.now()}-data-questions`,
-        sender: 'kael',
-        text: fullText,
-        timestamp: now
-      };
-      session.messages.push(replyMsg);
-      newMessages.push(replyMsg);
-      return { updatedSession: session, newMessages };
-    }
+    const promptText = getConfirmationPrompt(session.fullName, session.birthDate, false);
+    const fullText = answerText ? `${answerText}\n\n${promptText}` : promptText;
+    const replyMsg: KaelMessage = {
+      id: `kael-${Date.now()}-data-questions`,
+      sender: 'kael',
+      text: fullText,
+      timestamp: now
+    };
+    session.messages.push(replyMsg);
+    newMessages.push(replyMsg);
+    return { updatedSession: session, newMessages };
   }
 
   // 1.95 CORREÇÃO DE DADOS + PERGUNTA DE IMPACTO (ex: "Na verdade meu nome correto é Gabriel Braga Silva... isso muda o resultado do mapa?")
@@ -1338,7 +1875,117 @@ export async function handleKaelUserMessage(
     }
   }
 
-  // 2. CORREÇÃO / ALTERAÇÃO DE DADOS (SEÇÃO 7 e 8)
+  // 1.96 TRATAMENTO DE SUB-ESTADOS DE CORREÇÃO PENDENTE (AGUARDANDO_QUAL_DADO, CORRIGINDO_NOME, CORRIGINDO_DATA)
+  if (session.subState === 'AGUARDANDO_QUAL_DADO') {
+    if (interpretation.intent === 'CORRECT_NAME' || normalized === 'o nome' || normalized === 'nome' || normalized === 'meu nome') {
+      session.subState = 'CORRIGINDO_NOME';
+      session.pendingCorrection = 'fullName';
+      const replyMsg: KaelMessage = {
+        id: `kael-${Date.now()}-ask-correct-name`,
+        sender: 'kael',
+        text: 'Claro! Por favor, me informe o seu nome completo de nascimento correto.',
+        timestamp: now
+      };
+      session.messages.push(replyMsg);
+      newMessages.push(replyMsg);
+      return logFlowDecisionAndReturn(initialState, 'ASK_CORRECT_NAME', session, newMessages);
+    }
+
+    if (interpretation.intent === 'CORRECT_DATE' || normalized === 'a data' || normalized === 'data' || normalized === 'minha data') {
+      session.subState = 'CORRIGINDO_DATA';
+      session.pendingCorrection = 'birthDate';
+      const replyMsg: KaelMessage = {
+        id: `kael-${Date.now()}-ask-correct-date`,
+        sender: 'kael',
+        text: 'Claro! Por favor, me informe a sua data de nascimento correta (DD/MM/AAAA).',
+        timestamp: now
+      };
+      session.messages.push(replyMsg);
+      newMessages.push(replyMsg);
+      return logFlowDecisionAndReturn(initialState, 'ASK_CORRECT_DATE', session, newMessages);
+    }
+  }
+
+  if (session.subState === 'CORRIGINDO_NOME' && interpretation.intent !== 'QUESTION' && interpretation.intent !== 'ASK_PERMISSION_TO_ASK') {
+    const candidateName = interpretation.fullName || extractFullName(trimmed, undefined) || (isValidCandidateName(trimmed, trimmed, session.currentState, session) ? trimmed : null);
+    if (candidateName && isValidCandidateName(candidateName, trimmed, session.currentState, session)) {
+      session.fullName = candidateName;
+      session.subState = null;
+      session.pendingCorrection = null;
+      session.currentState = 'CONFIRMACAO_DOS_DADOS';
+      const formattedDate = formatBirthDateForDisplay(session.birthDate);
+      const replyText = `Perfeito, corrigi o seu nome.
+
+Nome completo de nascimento: ${session.fullName}${formattedDate ? `\nData de nascimento: ${formattedDate}` : ''}
+
+Agora os dados estão corretos?`;
+      const replyMsg: KaelMessage = {
+        id: `kael-${Date.now()}-name-updated`,
+        sender: 'kael',
+        text: replyText,
+        timestamp: now
+      };
+      session.messages.push(replyMsg);
+      newMessages.push(replyMsg);
+      return logFlowDecisionAndReturn(initialState, 'NAME_UPDATED', session, newMessages);
+    }
+  }
+
+  if (session.subState === 'CORRIGINDO_DATA' && interpretation.intent !== 'QUESTION' && interpretation.intent !== 'ASK_PERMISSION_TO_ASK') {
+    const extractedDate = interpretation.birthDate || extractBirthDate(trimmed);
+    if (extractedDate && extractedDate.isValid) {
+      session.birthDate = extractedDate.iso;
+      session.subState = null;
+      session.pendingCorrection = null;
+      session.currentState = 'CONFIRMACAO_DOS_DADOS';
+      const formattedDate = formatBirthDateForDisplay(session.birthDate);
+      const replyText = `Perfeito, corrigi a sua data de nascimento.
+
+${session.fullName ? `Nome completo de nascimento: ${session.fullName}\n` : ''}Data de nascimento: ${formattedDate}
+
+Agora os dados estão corretos?`;
+      const replyMsg: KaelMessage = {
+        id: `kael-${Date.now()}-date-updated`,
+        sender: 'kael',
+        text: replyText,
+        timestamp: now
+      };
+      session.messages.push(replyMsg);
+      newMessages.push(replyMsg);
+      return logFlowDecisionAndReturn(initialState, 'DATE_UPDATED', session, newMessages);
+    }
+  }
+
+  // 1.97 INTENÇÕES EXPLÍCITAS DE CORREÇÃO DE NOME OU DATA
+  if (interpretation.intent === 'CORRECT_NAME' || interpretation.intent === 'NAME_CORRECTION') {
+    session.subState = 'CORRIGINDO_NOME';
+    session.pendingCorrection = 'fullName';
+    const replyMsg: KaelMessage = {
+      id: `kael-${Date.now()}-correct-name-intent`,
+      sender: 'kael',
+      text: 'Claro! Por favor, me informe o seu nome completo de nascimento correto.',
+      timestamp: now
+    };
+    session.messages.push(replyMsg);
+    newMessages.push(replyMsg);
+    return logFlowDecisionAndReturn(initialState, 'CORRECT_NAME_INTENT', session, newMessages);
+  }
+
+  if (interpretation.intent === 'CORRECT_DATE' || interpretation.intent === 'DATE_CORRECTION') {
+    session.subState = 'CORRIGINDO_DATA';
+    session.pendingCorrection = 'birthDate';
+    const replyMsg: KaelMessage = {
+      id: `kael-${Date.now()}-correct-date-intent`,
+      sender: 'kael',
+      text: 'Claro! Por favor, me informe a sua data de nascimento correta (DD/MM/AAAA).',
+      timestamp: now
+    };
+    session.messages.push(replyMsg);
+    newMessages.push(replyMsg);
+    return logFlowDecisionAndReturn(initialState, 'CORRECT_DATE_INTENT', session, newMessages);
+  }
+
+  // 2. CORREÇÃO / ALTERAÇÃO DE DADOS GERAL (REQUEST_CHANGE_DATA / CORRECTION)
   if (interpretation.intent === 'REQUEST_CHANGE_DATA' || interpretation.intent === 'CORRECTION') {
     const hasNewData = Boolean(interpretation.fullName || interpretation.birthDate);
 
@@ -1349,74 +1996,159 @@ export async function handleKaelUserMessage(
       if (interpretation.birthDate) {
         session.birthDate = interpretation.birthDate.iso;
       }
+      session.subState = null;
+      session.pendingCorrection = null;
+      session.currentState = 'CONFIRMACAO_DOS_DADOS';
 
-      if (session.fullName && session.birthDate) {
-        session.currentState = 'CONFIRMACAO_DOS_DADOS';
-        const promptText = getConfirmationPrompt(session.fullName, session.birthDate, true);
-        const replyMsg: KaelMessage = {
-          id: `kael-${Date.now()}-confirm-change`,
-          sender: 'kael',
-          text: promptText,
-          timestamp: now
-        };
-        session.messages.push(replyMsg);
-        newMessages.push(replyMsg);
-        return { updatedSession: session, newMessages };
-      } else {
-        session.currentState = 'AGUARDANDO_NOME_DATA';
-        const askText = !session.fullName
-          ? 'Sem problema! Qual é o seu nome completo de nascimento correto?'
-          : 'Sem problema! Qual é a sua data de nascimento correta (DD/MM/AAAA)?';
-        const replyMsg: KaelMessage = {
-          id: `kael-${Date.now()}-ask-missing`,
-          sender: 'kael',
-          text: askText,
-          timestamp: now
-        };
-        session.messages.push(replyMsg);
-        newMessages.push(replyMsg);
-        return { updatedSession: session, newMessages };
-      }
+      const replyText = `Perfeito! Atualizei os seus dados.${session.fullName ? ` Nome: ${session.fullName}.` : ''}${session.birthDate ? ` Data: ${formatBirthDateForDisplay(session.birthDate)}.` : ''}\n\nOs dados estão corretos agora?`;
+      const replyMsg: KaelMessage = {
+        id: `kael-${Date.now()}-confirm-change`,
+        sender: 'kael',
+        text: replyText,
+        timestamp: now
+      };
+      session.messages.push(replyMsg);
+      newMessages.push(replyMsg);
+      return logFlowDecisionAndReturn(initialState, 'DATA_UPDATED_DIRECTLY', session, newMessages);
     } else {
-      // Nenhum dado novo veio na mensagem (ex: "eu mandei o nome errado")
-      const trimmedLower = trimmed.toLowerCase();
-      if (trimmedLower.includes('nome')) {
-        session.fullName = undefined;
-        session.currentState = 'AGUARDANDO_NOME_DATA';
-        const replyMsg: KaelMessage = {
-          id: `kael-${Date.now()}-ask-name`,
-          sender: 'kael',
-          text: 'Sem problema! Qual é o seu nome completo de nascimento correto?',
-          timestamp: now
-        };
-        session.messages.push(replyMsg);
-        newMessages.push(replyMsg);
-        return { updatedSession: session, newMessages };
-      } else if (trimmedLower.includes('data')) {
-        session.birthDate = undefined;
-        session.currentState = 'AGUARDANDO_NOME_DATA';
-        const replyMsg: KaelMessage = {
-          id: `kael-${Date.now()}-ask-date`,
-          sender: 'kael',
-          text: 'Sem problema! Qual é a sua data de nascimento correta (DD/MM/AAAA)?',
-          timestamp: now
-        };
-        session.messages.push(replyMsg);
-        newMessages.push(replyMsg);
-        return { updatedSession: session, newMessages };
+      session.subState = 'AGUARDANDO_QUAL_DADO';
+      const replyMsg: KaelMessage = {
+        id: `kael-${Date.now()}-ask-which-data`,
+        sender: 'kael',
+        text: 'Sem problema! Qual dado você deseja corrigir: o nome completo ou a data de nascimento?',
+        timestamp: now
+      };
+      session.messages.push(replyMsg);
+      newMessages.push(replyMsg);
+      return logFlowDecisionAndReturn(initialState, 'ASK_WHICH_DATA_TO_CORRECT', session, newMessages);
+    }
+  }
+
+  // 2.2 PERMISSÃO PARA FAZER DÚVIDA / PERGUNTA (ASK_PERMISSION_TO_ASK)
+  if (interpretation.intent === 'ASK_PERMISSION_TO_ASK') {
+    session.pendingUserQuestion = true;
+    const replyMsg: KaelMessage = {
+      id: `kael-${Date.now()}-permission-granted`,
+      sender: 'kael',
+      text: 'Claro! Pode perguntar. Estou aqui para esclarecer sua dúvida antes de você decidir.',
+      timestamp: now
+    };
+    session.messages.push(replyMsg);
+    newMessages.push(replyMsg);
+    return logFlowDecisionAndReturn(initialState, 'ASK_PERMISSION_TO_ASK', session, newMessages);
+  }
+
+  // 2.3 TRATAMENTO DE PERGUNTAS E DÚVIDAS DO USUÁRIO
+  if (interpretation.intent === 'QUESTION' || interpretation.intent === 'PAYMENT_QUESTION') {
+    session.pendingUserQuestion = false;
+
+    const normQuestion = normalized.toLowerCase();
+    let answer: string | null = null;
+
+    if (interpretation.intent === 'PAYMENT_QUESTION') {
+      answer = 'O investimento promocional para a elaboração do seu Mapa Numerológico Cabalístico completo é de R$ 15,00.';
+    }
+
+    // A. Perguntas sobre nome registrado
+    if (!answer && (normQuestion.includes('qual e o meu nome') || normQuestion.includes('qual e meu nome') || normQuestion.includes('qual meu nome') || normQuestion.includes('saber meu nome'))) {
+      if (session.fullName) {
+        answer = `Você me informou o nome ${session.fullName}.`;
       } else {
-        session.currentState = 'AGUARDANDO_NOME_DATA';
-        const replyMsg: KaelMessage = {
-          id: `kael-${Date.now()}-ask-which`,
-          sender: 'kael',
-          text: 'Sem problema! Me informe qual dado você deseja corrigir (o nome completo ou a data de nascimento).',
-          timestamp: now
-        };
-        session.messages.push(replyMsg);
-        newMessages.push(replyMsg);
-        return { updatedSession: session, newMessages };
+        answer = 'Você ainda não me informou o seu nome completo de nascimento.';
       }
     }
+    // B. Perguntas sobre data registrada
+    else if (!answer && (normQuestion.includes('qual e a minha data') || normQuestion.includes('qual e minha data') || normQuestion.includes('qual minha data'))) {
+      if (session.birthDate) {
+        answer = `Você me informou a data de nascimento ${formatBirthDateForDisplay(session.birthDate)}.`;
+      } else {
+        answer = 'Você ainda não me informou a sua data de nascimento.';
+      }
+    }
+    // C. Perguntas sobre trabalho / profissão / carreira
+    else if (!answer && (normQuestion.includes('trabalho') || normQuestion.includes('profissao') || normQuestion.includes('profissão') || normQuestion.includes('carreira'))) {
+      answer = 'Sim. O mapa pode trazer interpretações relacionadas a aspectos profissionais, talentos, desafios e tendências dentro da tradição da Numerologia Cabalística. Lembrando que se trata de uma prática de interpretação e autoconhecimento, não de uma previsão científica.';
+    }
+    // D. Perguntas sobre erro/invalidade anterior
+    else if (!answer && (normQuestion.includes('invalida') || normQuestion.includes('inválida') || normQuestion.includes('por que deu erro') || normQuestion.includes('porque deu erro') || normQuestion.includes('esta errada') || normQuestion.includes('está errada'))) {
+      answer = 'A data 20/03/1990 (ou qualquer data real do calendário) é válida. Se o sistema indicou algum erro anteriormente, foi apenas uma divergência de formatação momentânea. Pode desconsiderar aquela mensagem.';
+    }
+
+    if (!answer) {
+      answer = answerSpontaneousQuestion(trimmed) || interpretation.responseGuidance;
+    }
+
+    if (!answer && aiAnswerFn) {
+      try {
+        const prompt = `Você é o Kael, assistente virtual calmo, educado e acolhedor do Mapa Numerológico Cabalístico.
+O cliente está com a seguinte dúvida: "${trimmed}"
+Responda de forma clara, amigável e concisa (máximo 2 parágrafos). Não mude o preço promocional de R$ 15,00 nem prometa nada fora do roteiro.`;
+        answer = await aiAnswerFn(prompt);
+      } catch (err) {
+        console.error('Erro ao responder dúvida via Gemini:', err);
+      }
+    }
+
+    if (!answer) {
+      answer = 'Estou aqui para esclarecer qualquer dúvida sobre o seu Mapa Numerológico Cabalístico.';
+    }
+
+    let fullText = answer;
+    if (session.currentState === 'CONFIRMACAO_DOS_DADOS') {
+      fullText += '\n\nSe quiser, podemos voltar à confirmação dos seus dados.';
+    } else {
+      fullText += getStateAnchorPrompt(session.currentState, session);
+    }
+
+    const replyMsg: KaelMessage = {
+      id: `kael-${Date.now()}-question-answered`,
+      sender: 'kael',
+      text: fullText,
+      timestamp: now
+    };
+    session.messages.push(replyMsg);
+    newMessages.push(replyMsg);
+    return logFlowDecisionAndReturn(initialState, 'QUESTION_ANSWERED', session, newMessages);
+  }
+
+  // 2.5 IDENTIDADE DE IA, FRUSTRAÇÃO E SUPORTE HUMANO
+  if (interpretation.intent === 'AI_IDENTITY') {
+    const aiText = 'Sou o Kael, assistente virtual inteligente desenvolvido para te auxiliar na solicitação e esclarecimento de dúvidas sobre o seu Mapa Numerológico Cabalístico.' + getStateAnchorPrompt(session.currentState, session);
+    const replyMsg: KaelMessage = {
+      id: `kael-${Date.now()}-ai-identity`,
+      sender: 'kael',
+      text: aiText,
+      timestamp: now
+    };
+    session.messages.push(replyMsg);
+    newMessages.push(replyMsg);
+    return logFlowDecisionAndReturn(initialState, 'AI_IDENTITY', session, newMessages);
+  }
+
+  if (interpretation.intent === 'USER_FRUSTRATION') {
+    const frustText = 'Peço desculpas pela repetição e por não ter compreendido perfeitamente o que você quis dizer antes. Não quero te enviar respostas prontas. Por favor, me diga exatamente o que você gostaria de saber ou corrigir que eu respondo diretamente a você.' + getStateAnchorPrompt(session.currentState, session);
+    const replyMsg: KaelMessage = {
+      id: `kael-${Date.now()}-frustration`,
+      sender: 'kael',
+      text: frustText,
+      timestamp: now
+    };
+    session.messages.push(replyMsg);
+    newMessages.push(replyMsg);
+    return logFlowDecisionAndReturn(initialState, 'USER_FRUSTRATION', session, newMessages);
+  }
+
+  if (interpretation.intent === 'HUMAN_SUPPORT_REQUEST' || interpretation.needsHumanSupport) {
+    const humanText = 'No momento, todo o atendimento e a elaboração do Mapa Numerológico Cabalístico são realizados 100% de forma digital e automatizada por mim (Kael) diretamente aqui no chat. Estou à disposição para tirar qualquer dúvida que você tiver sobre o mapa!' + getStateAnchorPrompt(session.currentState, session);
+    const replyMsg: KaelMessage = {
+      id: `kael-${Date.now()}-human-support`,
+      sender: 'kael',
+      text: humanText,
+      timestamp: now
+    };
+    session.messages.push(replyMsg);
+    newMessages.push(replyMsg);
+    return logFlowDecisionAndReturn(initialState, 'HUMAN_SUPPORT_REQUEST', session, newMessages);
   }
 
   // 3. FRUSTRAÇÃO / RECLAMAÇÃO DO CLIENTE (SEÇÃO 15)
@@ -1509,8 +2241,52 @@ export async function handleKaelUserMessage(
     return { updatedSession: session, newMessages };
   }
 
+  // 6.5 TRATAMENTO DE PREOCUPAÇÕES / MEDO DE PERDER DINHEIRO / OBJEÇÕES FINANCEIRAS
+  if (interpretation.isConcern || normalized.includes('medo') || normalized.includes('perder meu dinheiro') || normalized.includes('perder dinheiro') || normalized.includes('receio')) {
+    let concernAnswer = answerSpontaneousQuestion(trimmed) || interpretation.responseGuidance;
+    if (!concernAnswer) {
+      concernAnswer = 'Compreendo perfeitamente o seu receio. O valor de R$ 15,00 é processado com total segurança via PIX, e o seu Mapa Numerológico Cabalístico em PDF é elaborado e disponibilizado diretamente aqui nesta conversa logo após a confirmação do pagamento.';
+    }
+
+    const anchor = getStateAnchorPrompt(session.currentState, session);
+    const fullText = `${concernAnswer}${anchor}`;
+    const replyMsg: KaelMessage = {
+      id: `kael-${Date.now()}-concern`,
+      sender: 'kael',
+      text: fullText,
+      timestamp: now
+    };
+    session.messages.push(replyMsg);
+    newMessages.push(replyMsg);
+    return logFlowDecisionAndReturn(initialState, 'FINANCIAL_CONCERN_OR_OBJECTION', session, newMessages);
+  }
+
   // 7. CONFIRMAÇÃO POSITIVA DOS DADOS EM CONFIRMACAO_DOS_DADOS
   if (session.currentState === 'CONFIRMACAO_DOS_DADOS' && (interpretation.intent === 'AFFIRMATION' || interpretation.intent === 'CONFIRMATION' || (interpretation.intent === 'NAME_AND_BIRTH_DATE' && interpretation.fullName === session.fullName))) {
+    // Se a mensagem contiver uma dúvida ou pergunta adicional (ex: "está certo, mas quanto tempo demora?"), responde à dúvida e re-pede a confirmação sem mudar de estado
+    const hasQuestionInAffirmation = interpretation.isQuestion || multi.topicCount >= 1 || trimmed.includes('?') || normalized.includes('mas') || normalized.includes('quanto') || normalized.includes('como') || normalized.includes('demora');
+
+    if (hasQuestionInAffirmation && (multi.hasDeliveryQuestion || multi.hasPriceQuestion || multi.hasProfessionQuestion || interpretation.isQuestion || trimmed.includes('?'))) {
+      let answer = answerSpontaneousQuestion(trimmed);
+      if (!answer && multi.hasDeliveryQuestion) {
+        answer = 'Depois que o pagamento for confirmado, o mapa é elaborado e o PDF é disponibilizado por aqui nesta conversa.';
+      }
+      if (!answer) {
+        answer = 'Esclarecendo sua dúvida: o seu mapa é elaborado com total precisão após a confirmação do pagamento.';
+      }
+
+      const promptText = getConfirmationPrompt(session.fullName || '', session.birthDate || '', false);
+      const replyMsg: KaelMessage = {
+        id: `kael-${Date.now()}-affirmation-with-question`,
+        sender: 'kael',
+        text: `${answer}\n\n${promptText}`,
+        timestamp: now
+      };
+      session.messages.push(replyMsg);
+      newMessages.push(replyMsg);
+      return logFlowDecisionAndReturn(initialState, 'AFFIRMATION_WITH_QUESTION', session, newMessages);
+    }
+
     session.currentState = 'AGUARDANDO_PAGAMENTO';
     const msg4: KaelMessage = {
       id: `kael-${Date.now()}-4`,
@@ -1526,7 +2302,7 @@ export async function handleKaelUserMessage(
     };
     session.messages.push(msg4, msg5);
     newMessages.push(msg4, msg5);
-    return { updatedSession: session, newMessages };
+    return logFlowDecisionAndReturn(initialState, 'CONFIRMATION_GOTO_PAYMENT', session, newMessages);
   }
 
   // 8. ESCLARECIMENTO DE ACENTOS / REGRAS
@@ -1540,19 +2316,6 @@ export async function handleKaelUserMessage(
       id: `kael-${Date.now()}-clarification`,
       sender: 'kael',
       text: replyText,
-      timestamp: now
-    };
-    session.messages.push(replyMsg);
-    newMessages.push(replyMsg);
-    return { updatedSession: session, newMessages };
-  }
-
-  // 9. DÚVIDAS DE PREÇO (SEÇÃO 23)
-  if (interpretation.intent === 'PAYMENT_QUESTION') {
-    const replyMsg: KaelMessage = {
-      id: `kael-${Date.now()}-price`,
-      sender: 'kael',
-      text: 'O investimento promocional é de R$ 15,00.' + getStateAnchorPrompt(session.currentState, session),
       timestamp: now
     };
     session.messages.push(replyMsg);
@@ -1580,71 +2343,13 @@ export async function handleKaelUserMessage(
     };
     session.messages.push(replyMsg);
     newMessages.push(replyMsg);
-    return { updatedSession: session, newMessages };
-  }
-
-  // 11. DÚVIDAS E PERGUNTAS (SEÇÃO 11, 24)
-  if (interpretation.intent === 'QUESTION') {
-    const normQuestion = normalized.toLowerCase();
-    let answer: string | null = null;
-
-    // A. Perguntas sobre nome registrado
-    if (normQuestion.includes('qual e o meu nome') || normQuestion.includes('qual e meu nome') || normQuestion.includes('qual meu nome') || normQuestion.includes('saber meu nome')) {
-      if (session.fullName) {
-        answer = `Você me informou o nome ${session.fullName}.`;
-      } else {
-        answer = 'Você ainda não me informou o seu nome completo de nascimento.';
-      }
-    }
-    // B. Perguntas sobre data registrada
-    else if (normQuestion.includes('qual e a minha data') || normQuestion.includes('qual e minha data') || normQuestion.includes('qual minha data')) {
-      if (session.birthDate) {
-        answer = `Você me informou a data de nascimento ${formatBirthDateForDisplay(session.birthDate)}.`;
-      } else {
-        answer = 'Você ainda não me informou a sua data de nascimento.';
-      }
-    }
-    // C. Perguntas sobre erro/invalidade anterior
-    else if (normQuestion.includes('invalida') || normQuestion.includes('inválida') || normQuestion.includes('por que deu erro') || normQuestion.includes('porque deu erro') || normQuestion.includes('esta errada') || normQuestion.includes('está errada')) {
-      answer = 'A data 20/03/1990 (ou qualquer data real do calendário) é válida. Se o sistema indicou algum erro anteriormente, foi apenas uma divergência de formatação momentânea. Pode desconsiderar aquela mensagem.';
-    }
-
-    if (!answer) {
-      answer = answerSpontaneousQuestion(trimmed);
-    }
-
-    if (!answer && aiAnswerFn) {
-      try {
-        const prompt = `Você é o Kael, assistente virtual calmo, educado e acolhedor do Mapa Numerológico Cabalístico.
-O cliente está com a seguinte dúvida: "${trimmed}"
-Responda de forma clara, amigável e concisa (máximo 2 parágrafos). Não mude o preço promocional de R$ 15,00 nem prometa nada fora do roteiro.`;
-        answer = await aiAnswerFn(prompt);
-      } catch (err) {
-        console.error('Erro ao responder dúvida via Gemini:', err);
-      }
-    }
-
-    if (!answer) {
-      answer = 'Estou aqui para esclarecer qualquer dúvida sobre o seu Mapa Numerológico Cabalístico.';
-    }
-
-    const fullText = `${answer}${getStateAnchorPrompt(session.currentState, session)}`;
-    const replyMsg: KaelMessage = {
-      id: `kael-${Date.now()}-question`,
-      sender: 'kael',
-      text: fullText,
-      timestamp: now
-    };
-    session.messages.push(replyMsg);
-    newMessages.push(replyMsg);
-    return { updatedSession: session, newMessages };
+    return logFlowDecisionAndReturn(initialState, 'PURCHASE_INTENT', session, newMessages, interpretation.greetingTextToSpeak);
   }
 
   // 12. CUMPRIMENTO ("olá", "bom dia")
   if (interpretation.intent === 'GREETING') {
-    const greetingText = session.presentationAlreadyMade
-      ? 'Olá! Como posso te ajudar?' + getStateAnchorPrompt(session.currentState, session)
-      : 'Olá! Que bom falar com você.' + getStateAnchorPrompt(session.currentState, session);
+    const greetingSpeak = interpretation.greetingTextToSpeak || 'Olá! 😊';
+    const greetingText = buildPureGreetingResponse(greetingSpeak, session);
 
     const replyMsg: KaelMessage = {
       id: `kael-${Date.now()}-greeting`,
@@ -1654,7 +2359,7 @@ Responda de forma clara, amigável e concisa (máximo 2 parágrafos). Não mude 
     };
     session.messages.push(replyMsg);
     newMessages.push(replyMsg);
-    return { updatedSession: session, newMessages };
+    return logFlowDecisionAndReturn(initialState, 'GREETING', session, newMessages, interpretation.greetingTextToSpeak);
   }
 
   // 13. ENVIO / CORREÇÃO DE DADOS (NAME, BIRTH_DATE ou NAME_AND_BIRTH_DATE)
@@ -1662,7 +2367,9 @@ Responda de forma clara, amigável e concisa (máximo 2 parágrafos). Não mude 
     const isCorrection = session.currentState === 'CONFIRMACAO_DOS_DADOS';
 
     if (interpretation.fullName) {
-      session.fullName = interpretation.fullName;
+      if (isValidCandidateName(interpretation.fullName, trimmed, session.currentState, session)) {
+        session.fullName = interpretation.fullName;
+      }
     }
     if (interpretation.birthDate) {
       session.birthDate = interpretation.birthDate.iso;
@@ -1680,7 +2387,7 @@ Responda de forma clara, amigável e concisa (máximo 2 parágrafos). Não mude 
       };
       session.messages.push(confirmMsg);
       newMessages.push(confirmMsg);
-      return { updatedSession: session, newMessages };
+      return logFlowDecisionAndReturn(initialState, 'NAME_AND_BIRTH_DATE', session, newMessages, interpretation.greetingTextToSpeak);
     }
 
     if (session.birthDate && !session.fullName) {
@@ -1693,7 +2400,7 @@ Responda de forma clara, amigável e concisa (máximo 2 parágrafos). Não mude 
       };
       session.messages.push(replyMsg);
       newMessages.push(replyMsg);
-      return { updatedSession: session, newMessages };
+      return logFlowDecisionAndReturn(initialState, 'BIRTH_DATE', session, newMessages, interpretation.greetingTextToSpeak);
     }
 
     if (session.fullName && !session.birthDate) {
@@ -1705,7 +2412,7 @@ Responda de forma clara, amigável e concisa (máximo 2 parágrafos). Não mude 
       };
       session.messages.push(replyMsg);
       newMessages.push(replyMsg);
-      return { updatedSession: session, newMessages };
+      return logFlowDecisionAndReturn(initialState, 'NAME', session, newMessages, interpretation.greetingTextToSpeak);
     }
   }
 
@@ -1722,7 +2429,7 @@ Responda de forma clara, amigável e concisa (máximo 2 parágrafos). Não mude 
     };
     session.messages.push(closeMsg);
     newMessages.push(closeMsg);
-    return { updatedSession: session, newMessages };
+    return logFlowDecisionAndReturn(initialState, 'EXCESS_OFFTOPIC_CLOSE', session, newMessages, interpretation.greetingTextToSpeak);
   }
 
   const anchor = getStateAnchorPrompt(session.currentState, session);
@@ -1735,6 +2442,5 @@ Responda de forma clara, amigável e concisa (máximo 2 parágrafos). Não mude 
   };
   session.messages.push(fallbackMsg);
   newMessages.push(fallbackMsg);
-
-  return { updatedSession: session, newMessages };
+  return logFlowDecisionAndReturn(initialState, 'FALLBACK', session, newMessages, interpretation.greetingTextToSpeak);
 }

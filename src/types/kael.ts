@@ -42,6 +42,9 @@ export interface KaelSession {
   sessionStartedAt?: string;
   lastTopic?: string;
   lastKaelReply?: string;
+  pendingCorrection?: 'fullName' | 'birthDate' | 'both' | null;
+  subState?: 'CORRIGINDO_NOME' | 'CORRIGINDO_DATA' | 'AGUARDANDO_QUAL_DADO' | null;
+  pendingUserQuestion?: boolean;
 }
 
 export interface PaymentService {
@@ -53,8 +56,13 @@ export interface PaymentService {
 export type MessageIntent =
   | 'GREETING'
   | 'QUESTION'
+  | 'ASK_PERMISSION_TO_ASK'
   | 'CLARIFICATION'
   | 'CORRECTION'
+  | 'CORRECT_NAME'
+  | 'CORRECT_DATE'
+  | 'NAME_CORRECTION'
+  | 'DATE_CORRECTION'
   | 'NAME'
   | 'BIRTH_DATE'
   | 'NAME_AND_BIRTH_DATE'
@@ -74,6 +82,10 @@ export type MessageIntent =
   | 'REQUEST_HELP'
   | 'COMPLAINT'
   | 'CONFUSION'
+  | 'AI_IDENTITY'
+  | 'USER_FRUSTRATION'
+  | 'HUMAN_SUPPORT_REQUEST'
+  | 'FINANCIAL_CONCERN_OR_OBJECTION'
   | 'OFF_TOPIC'
   | 'PURCHASE_INTENT'
   | 'NO_PURCHASE'
@@ -87,5 +99,15 @@ export interface ClientInterpretation {
   explanation?: string;
   confidence: number;
   targetField?: 'fullName' | 'birthDate' | 'both';
+  isProvidingName?: boolean;
+  isProvidingBirthDate?: boolean;
+  isCorrectingData?: boolean;
+  isConfirmation?: boolean;
+  isQuestion?: boolean;
+  isConcern?: boolean;
+  needsHumanSupport?: boolean;
+  shouldAdvanceFlow?: boolean;
+  responseGuidance?: string;
+  greetingTextToSpeak?: string | null;
 }
 

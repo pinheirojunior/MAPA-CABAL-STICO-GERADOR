@@ -820,6 +820,243 @@ export async function runKaelNLUTests() {
     console.log(`✅ TESTE 59.2 PASSOU! Todas as correções foram devidamente tratadas sem encerrar a conversa`);
   }
 
+  // TESTE 60: Proteção de Dados de Sessão contra Frases de Medo/Objeção/Conversa ("to com medo de perder meu dinheiro")
+  console.log('\n[TESTE 60] Proteção de Dados de Sessão contra Objeções/Medo pós-confirmação');
+  const s60 = createKaelSession('test-session-fear-objection');
+  await handleKaelUserMessage(s60, 'José Pinheiro Junior');
+  await handleKaelUserMessage(s60, '20 03 1990');
+  console.log('Dados antes da objeção:', { fullName: s60.fullName, birthDate: s60.birthDate, state: s60.currentState });
+
+  const resFear = await handleKaelUserMessage(s60, 'to com medo de perder meu dinheiro');
+  console.log('Dados após a objeção:', { fullName: resFear.updatedSession.fullName, birthDate: resFear.updatedSession.birthDate, state: resFear.updatedSession.currentState });
+  const fearMsg = resFear.newMessages.map(m => m.text).join('\n');
+  console.log('Resposta do Kael:', fearMsg);
+
+  if (
+    resFear.updatedSession.fullName === 'José Pinheiro Junior' &&
+    resFear.updatedSession.birthDate === '1990-03-20' &&
+    !fearMsg.includes('To Medo Perder') &&
+    (fearMsg.toLowerCase().includes('receio') || fearMsg.toLowerCase().includes('segurança') || fearMsg.toLowerCase().includes('pix') || fearMsg.toLowerCase().includes('confira'))
+  ) {
+    console.log('✅ TESTE 60 PASSOU! Nome mantido como "José Pinheiro Junior", data mantida como "1990-03-20", e resposta acolhedora de segurança enviada.');
+  } else {
+    console.error('❌ TESTE 60 FALHOU!', {
+      fullName: resFear.updatedSession.fullName,
+      birthDate: resFear.updatedSession.birthDate,
+      reply: fearMsg
+    });
+  }
+
+  // --- TESTES MANDATÓRIOS DO ROTEIRO OFICIAL (1 a 10) ---
+  console.log('\n==================================================');
+  console.log('--- EXECUTANDO OS 10 TESTES MANDATÓRIOS DE INTELIGÊNCIA CONTEXTUAL ---');
+
+  // MANDATÓRIO 1: Saudação ("oi tudo bem?")
+  console.log('\n[MANDATÓRIO 1] Cliente: "oi tudo bem?"');
+  const m1Session = createKaelSession('m1');
+  const m1Res = await handleKaelUserMessage(m1Session, 'oi tudo bem?');
+  const m1Text = m1Res.newMessages.map(m => m.text).join('\n');
+  console.log('Resposta M1:', m1Text);
+  if (m1Res.updatedSession.fullName === undefined && (m1Text.toLowerCase().includes('olá') || m1Text.toLowerCase().includes('ajudar') || m1Text.toLowerCase().includes('tudo bem'))) {
+    console.log('✅ MANDATÓRIO 1 PASSOU! (Saudação natural, nome não extraído)');
+  } else {
+    console.error('❌ MANDATÓRIO 1 FALHOU!', { fullName: m1Res.updatedSession.fullName, reply: m1Text });
+  }
+
+  // MANDATÓRIO 2: Entendimento da Funcionalidade ("isso funciona?")
+  console.log('\n[MANDATÓRIO 2] Cliente: "isso funciona?"');
+  const m2Session = createKaelSession('m2');
+  const m2Res = await handleKaelUserMessage(m2Session, 'isso funciona?');
+  const m2Text = m2Res.newMessages.map(m => m.text).join('\n');
+  console.log('Resposta M2:', m2Text);
+  if (m2Res.updatedSession.fullName === undefined && (m2Text.toLowerCase().includes('autoconhecimento') || m2Text.toLowerCase().includes('mapa') || m2Text.toLowerCase().includes('numerologia'))) {
+    console.log('✅ MANDATÓRIO 2 PASSOU! (Explicação sobre funcionalidade prestada, nome não extraído)');
+  } else {
+    console.error('❌ MANDATÓRIO 2 FALHOU!', { fullName: m2Res.updatedSession.fullName, reply: m2Text });
+  }
+
+  // MANDATÓRIO 3: Identidade de IA ("você é uma IA?")
+  console.log('\n[MANDATÓRIO 3] Cliente: "você é uma IA?"');
+  const m3Session = createKaelSession('m3');
+  const m3Res = await handleKaelUserMessage(m3Session, 'você é uma IA?');
+  const m3Text = m3Res.newMessages.map(m => m.text).join('\n');
+  console.log('Resposta M3:', m3Text);
+  if (m3Res.updatedSession.fullName === undefined && (m3Text.toLowerCase().includes('kael') || m3Text.toLowerCase().includes('assistente') || m3Text.toLowerCase().includes('virtual'))) {
+    console.log('✅ MANDATÓRIO 3 PASSOU! (Identidade de IA esclarecida com transparência, nome não extraído)');
+  } else {
+    console.error('❌ MANDATÓRIO 3 FALHOU!', { fullName: m3Res.updatedSession.fullName, reply: m3Text });
+  }
+
+  // MANDATÓRIO 4: Frustração do Usuário ("PORQUE SÓ RESPONDE COISAS REPETIDAS?")
+  console.log('\n[MANDATÓRIO 4] Cliente: "PORQUE SÓ RESPONDE COISAS REPETIDAS?"');
+  const m4Session = createKaelSession('m4');
+  const m4Res = await handleKaelUserMessage(m4Session, 'PORQUE SÓ RESPONDE COISAS REPETIDAS?');
+  const m4Text = m4Res.newMessages.map(m => m.text).join('\n');
+  console.log('Resposta M4:', m4Text);
+  if (m4Res.updatedSession.fullName === undefined && (m4Text.toLowerCase().includes('desculpas') || m4Text.toLowerCase().includes('repetição') || m4Text.toLowerCase().includes('compreendido'))) {
+    console.log('✅ MANDATÓRIO 4 PASSOU! (Acolheu frustração, pediu desculpas pela repetição, nome não extraído)');
+  } else {
+    console.error('❌ MANDATÓRIO 4 FALHOU!', { fullName: m4Res.updatedSession.fullName, reply: m4Text });
+  }
+
+  // MANDATÓRIO 5: Solicitação de Suporte Humano ("queria falar com alguém de verdade")
+  console.log('\n[MANDATÓRIO 5] Cliente: "queria falar com alguém de verdade"');
+  const m5Session = createKaelSession('m5');
+  const m5Res = await handleKaelUserMessage(m5Session, 'queria falar com alguém de verdade');
+  const m5Text = m5Res.newMessages.map(m => m.text).join('\n');
+  console.log('Resposta M5:', m5Text);
+  if (m5Res.updatedSession.fullName === undefined && m5Res.updatedSession.fullName !== 'Falare Alguem' && (m5Text.toLowerCase().includes('digital') || m5Text.toLowerCase().includes('kael') || m5Text.toLowerCase().includes('chat') || m5Text.toLowerCase().includes('atendimento'))) {
+    console.log('✅ MANDATÓRIO 5 PASSOU! (Explicou atendimento digital do Kael sem jamais salvar "Falare Alguem" como nome)');
+  } else {
+    console.error('❌ MANDATÓRIO 5 FALHOU!', { fullName: m5Res.updatedSession.fullName, reply: m5Text });
+  }
+
+  // MANDATÓRIO 6: Extração Correta de Nome ("José Pinheiro Junior")
+  console.log('\n[MANDATÓRIO 6] Cliente: "José Pinheiro Junior"');
+  const m6Session = createKaelSession('m6');
+  const m6Res = await handleKaelUserMessage(m6Session, 'José Pinheiro Junior');
+  console.log('Nome salvo M6:', m6Res.updatedSession.fullName);
+  if (m6Res.updatedSession.fullName === 'José Pinheiro Junior') {
+    console.log('✅ MANDATÓRIO 6 PASSOU! (Nome "José Pinheiro Junior" extraído perfeitamente)');
+  } else {
+    console.error('❌ MANDATÓRIO 6 FALHOU!', m6Res.updatedSession.fullName);
+  }
+
+  // MANDATÓRIO 7: Extração Correta de Data ("20 03 1990")
+  console.log('\n[MANDATÓRIO 7] Cliente: "20 03 1990"');
+  const m7Session = createKaelSession('m7');
+  await handleKaelUserMessage(m7Session, 'José Pinheiro Junior');
+  const m7Res = await handleKaelUserMessage(m7Session, '20 03 1990');
+  console.log('Data salva M7:', m7Res.updatedSession.birthDate);
+  if (m7Res.updatedSession.birthDate === '1990-03-20') {
+    console.log('✅ MANDATÓRIO 7 PASSOU! (Data "20 03 1990" extraída como "1990-03-20")');
+  } else {
+    console.error('❌ MANDATÓRIO 7 FALHOU!', m7Res.updatedSession.birthDate);
+  }
+
+  // MANDATÓRIO 8: Objeção Financeira ("to com medo de perder meu dinheiro")
+  console.log('\n[MANDATÓRIO 8] Cliente: "to com medo de perder meu dinheiro"');
+  const m8Session = createKaelSession('m8');
+  const m8Res = await handleKaelUserMessage(m8Session, 'to com medo de perder meu dinheiro');
+  const m8Text = m8Res.newMessages.map(m => m.text).join('\n');
+  console.log('Resposta M8:', m8Text);
+  if (m8Res.updatedSession.fullName === undefined && (m8Text.toLowerCase().includes('receio') || m8Text.toLowerCase().includes('segurança') || m8Text.toLowerCase().includes('pix'))) {
+    console.log('✅ MANDATÓRIO 8 PASSOU! (Objeção tratada acolhedoramente, nome não corrompido)');
+  } else {
+    console.error('❌ MANDATÓRIO 8 FALHOU!', { fullName: m8Res.updatedSession.fullName, reply: m8Text });
+  }
+
+  // MANDATÓRIO 9: Confirmação Ambígua ("pode ser")
+  console.log('\n[MANDATÓRIO 9] Cliente em CONFIRMACAO_DOS_DADOS: "pode ser"');
+  const m9Session = createKaelSession('m9');
+  m9Session.fullName = 'José Pinheiro Junior';
+  m9Session.birthDate = '1990-03-20';
+  m9Session.currentState = 'CONFIRMACAO_DOS_DADOS';
+  const m9Res = await handleKaelUserMessage(m9Session, 'pode ser');
+  console.log('Estado M9:', m9Res.updatedSession.currentState);
+  if (m9Res.updatedSession.currentState === 'CONFIRMACAO_DOS_DADOS') {
+    console.log('✅ MANDATÓRIO 9 PASSOU! (Mantido em CONFIRMACAO_DOS_DADOS pedindo confirmação clara sem avançar indevidamente)');
+  } else {
+    console.error('❌ MANDATÓRIO 9 FALHOU!', m9Res.updatedSession.currentState);
+  }
+
+  // MANDATÓRIO 10: Pergunta durante Confirmação ("está correto, mas quanto tempo demora?")
+  console.log('\n[MANDATÓRIO 10] Cliente em CONFIRMACAO_DOS_DADOS: "está correto, mas quanto tempo demora?"');
+  const m10Session = createKaelSession('m10');
+  m10Session.fullName = 'José Pinheiro Junior';
+  m10Session.birthDate = '1990-03-20';
+  m10Session.currentState = 'CONFIRMACAO_DOS_DADOS';
+  const m10Res = await handleKaelUserMessage(m10Session, 'está correto, mas quanto tempo demora?');
+  const m10Text = m10Res.newMessages.map(m => m.text).join('\n');
+  console.log('Resposta M10:', m10Text);
+  if (m10Text.toLowerCase().includes('elaborado') || m10Text.toLowerCase().includes('pagamento') || m10Text.toLowerCase().includes('pdf') || m10Text.toLowerCase().includes('conversa')) {
+    console.log('✅ MANDATÓRIO 10 PASSOU! (Respondeu sobre o tempo/entrega e reancorou o fluxo)');
+  } else {
+    console.error('❌ MANDATÓRIO 10 FALHOU!', m10Text);
+  }
+
+  // MANDATÓRIO 11: Fluxo Completo de Correção do Nome
+  console.log('\n[MANDATÓRIO 11] Fluxo de Correção de Nome');
+  const m11Session = createKaelSession('m11');
+  await handleKaelUserMessage(m11Session, 'José Pinheiro Juniore');
+  await handleKaelUserMessage(m11Session, '20 03 1990');
+  console.log('Pós dados iniciais -> Nome:', m11Session.fullName, '| Data:', m11Session.birthDate, '| Estado:', m11Session.currentState);
+
+  const m11ErrRes = await handleKaelUserMessage(m11Session, 'meu nome está errado');
+  console.log('Resposta após "meu nome está errado":', m11ErrRes.newMessages[0]?.text);
+  console.log('SubState após "meu nome está errado":', m11Session.subState);
+
+  const m11CorrRes = await handleKaelUserMessage(m11Session, 'José Pinheiro Junior');
+  console.log('Resposta após "José Pinheiro Junior":', m11CorrRes.newMessages[0]?.text);
+  console.log('Resultado final -> Nome:', m11Session.fullName, '| Data:', m11Session.birthDate, '| Estado:', m11Session.currentState);
+
+  if (
+    m11Session.fullName === 'José Pinheiro Junior' &&
+    m11Session.birthDate === '1990-03-20' &&
+    m11Session.currentState === 'CONFIRMACAO_DOS_DADOS' &&
+    m11CorrRes.newMessages[0]?.text.includes('José Pinheiro Junior') &&
+    m11CorrRes.newMessages[0]?.text.includes('20/03/1990')
+  ) {
+    console.log('✅ MANDATÓRIO 11 PASSOU! (Nome corrigido com sucesso, data mantida intacta, e resumo re-apresentado)');
+  } else {
+    console.error('❌ MANDATÓRIO 11 FALHOU!', {
+      fullName: m11Session.fullName,
+      birthDate: m11Session.birthDate,
+      state: m11Session.currentState,
+      subState: m11Session.subState,
+      reply: m11CorrRes.newMessages[0]?.text
+    });
+  }
+
+  // TESTE MANDATÓRIO 12: SAUDAÇÃO + CONTINUIDADE IMEDIATA DO FLUXO
+  console.log('\n[TESTE MANDATÓRIO 12] Saudações com continuidade imediata do fluxo');
+
+  // Case A: Greeting at conversation start
+  const m12aSession = createKaelSession('m12a');
+  const m12aRes = await handleKaelUserMessage(m12aSession, 'Oi, boa tarde!');
+  console.log('Case A Reply:', m12aRes.newMessages[0]?.text);
+  const m12aPassed = m12aRes.newMessages[0]?.text.includes('Boa tarde!') &&
+    m12aRes.newMessages[0]?.text.includes('nome completo de nascimento') &&
+    m12aSession.currentState === 'AGUARDANDO_NOME_DATA';
+
+  // Case B: Greeting mid-flow when name already registered
+  const m12bSession = createKaelSession('m12b');
+  await handleKaelUserMessage(m12bSession, 'José Pinheiro Junior');
+  const m12bRes = await handleKaelUserMessage(m12bSession, 'Oi, boa tarde!');
+  console.log('Case B Reply:', m12bRes.newMessages[0]?.text);
+  const m12bPassed = m12bRes.newMessages[0]?.text.includes('Boa tarde!') &&
+    m12bRes.newMessages[0]?.text.includes('Recebi o seu nome (José Pinheiro Junior)') &&
+    m12bRes.newMessages[0]?.text.includes('data de nascimento') &&
+    m12bSession.fullName === 'José Pinheiro Junior';
+
+  // Case C: Greeting + Question combined
+  const m12cSession = createKaelSession('m12c');
+  const m12cRes = await handleKaelUserMessage(m12cSession, 'Oi, boa tarde. Esse mapa funciona mesmo?');
+  console.log('Case C Reply:', m12cRes.newMessages[0]?.text);
+  const m12cPassed = m12cRes.newMessages[0]?.text.includes('Boa tarde!') &&
+    (m12cRes.newMessages[0]?.text.includes('Numerologia') || m12cRes.newMessages[0]?.text.includes('mapa')) &&
+    m12cRes.newMessages[0]?.text.includes('nome completo');
+
+  // Case D: Greeting + Data combined
+  const m12dSession = createKaelSession('m12d');
+  await handleKaelUserMessage(m12dSession, 'José Pinheiro Junior');
+  const m12dRes = await handleKaelUserMessage(m12dSession, 'Boa tarde, 20 03 1990');
+  console.log('Case D Reply:', m12dRes.newMessages[0]?.text);
+  const m12dPassed = m12dRes.newMessages[0]?.text.includes('Boa tarde!') &&
+    m12dRes.newMessages[0]?.text.includes('20/03/1990') &&
+    m12dSession.currentState === 'CONFIRMACAO_DOS_DADOS';
+
+  if (m12aPassed && m12bPassed && m12cPassed && m12dPassed) {
+    console.log('✅ MANDATÓRIO 12 PASSOU! (Saudações reconhecidas e fluxo mantido sem interrupções ou estagnação)');
+  } else {
+    console.error('❌ MANDATÓRIO 12 FALHOU!', {
+      a: m12aPassed,
+      b: m12bPassed,
+      c: m12cPassed,
+      d: m12dPassed
+    });
+  }
+
   console.log('\n--- FIM DOS TESTES DE NLU ---');
 }
 
