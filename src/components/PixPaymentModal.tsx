@@ -1,6 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Copy, Check, QrCode, AlertTriangle, Loader2, Sparkles, ShieldCheck } from 'lucide-react';
+import QRCode from 'qrcode';
 import { Order } from '../types';
+
+export const OFFICIAL_PIX_CODE = '00020101021126580014br.gov.bcb.pix01360efa1471-55ad-4ce9-9f7a-6cd5d173525c5204000053039865802BR5913JOSE P JUNIOR6009FORTALEZA62070503***6304F837';
 
 interface PixPaymentModalProps {
   order: Order;
@@ -16,13 +19,25 @@ export const PixPaymentModal: React.FC<PixPaymentModalProps> = ({
   const [copied, setCopied] = useState(false);
   const [loadingPayment, setLoadingPayment] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [qrCodeDataUrl, setQrCodeDataUrl] = useState<string>('');
 
-  const pixKey = "COLOQUE_AQUI_SUA_CHAVE_PIX";
+  const pixKey = OFFICIAL_PIX_CODE;
+
+  useEffect(() => {
+    QRCode.toDataURL(pixKey, {
+      width: 320,
+      margin: 2,
+      errorCorrectionLevel: 'M',
+      color: { dark: '#000000', light: '#ffffff' }
+    })
+      .then(url => setQrCodeDataUrl(url))
+      .catch(err => console.error('Erro gerando QR Code:', err));
+  }, [pixKey]);
 
   const handleCopyPix = () => {
     navigator.clipboard.writeText(pixKey);
     setCopied(true);
-    setTimeout(() => setCopied(false), 2500);
+    setTimeout(() => setCopied(false), 3000);
   };
 
   const handleSimulatePayment = async () => {
@@ -68,7 +83,7 @@ export const PixPaymentModal: React.FC<PixPaymentModalProps> = ({
               Valor a Pagar
             </span>
             <span className="text-2xl font-black text-emerald-400">
-              R$ 15,00
+              R$ 14,90
             </span>
           </div>
         </div>
@@ -94,16 +109,21 @@ export const PixPaymentModal: React.FC<PixPaymentModalProps> = ({
             Pagamento via PIX
           </h3>
           <p className="text-xs text-slate-300">
-            Copie a chave PIX abaixo ou simule a aprovação do teste para liberar o seu PDF.
+            Copie a chave PIX abaixo ou escaneie o QR Code no aplicativo do seu banco.
           </p>
         </div>
 
         {/* Simulação Visual do QR Code PIX */}
-        <div className="bg-white p-4 rounded-xl w-44 h-44 mx-auto mb-6 flex flex-col items-center justify-center border-4 border-amber-500/30 shadow-inner text-slate-900">
-          <QrCode className="w-28 h-28 text-slate-900" />
-          <span className="text-[9px] font-mono font-bold uppercase text-slate-600 mt-1">
-            PIX R$15,00
-          </span>
+        <div className="bg-white p-3 rounded-2xl w-48 h-48 mx-auto mb-6 flex flex-col items-center justify-center border-4 border-amber-500/30 shadow-2xl">
+          {qrCodeDataUrl ? (
+            <img
+              src={qrCodeDataUrl}
+              alt="QR Code PIX R$ 14,90"
+              className="w-40 h-40 object-contain rounded-lg"
+            />
+          ) : (
+            <QrCode className="w-28 h-28 text-slate-900 animate-pulse" />
+          )}
         </div>
 
         {/* Caixa da Chave PIX Cópia e Cola */}

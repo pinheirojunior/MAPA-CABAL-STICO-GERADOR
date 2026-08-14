@@ -1,0 +1,477 @@
+{
+  "kael-1786597681368-cogu": {
+    "sessionId": "kael-1786597681368-cogu",
+    "currentState": "MENU_PRINCIPAL",
+    "messages": [
+      {
+        "id": "kael-1786670938502-init",
+        "sender": "kael",
+        "text": "Olá! Eu sou o Kael. Que bom ter você aqui!\n\nJá pensou receber em suas mãos o mapa numérico e espiritual da sua vida?\n\nA partir do seu nome e data de nascimento, o Mapa Cabalístico revela seus caminhos, desafios e o seu propósito de vida.\n\nPosso te ajudar a conhecer e solicitar o seu mapa agora mesmo.\n\nEscolha uma opção:",
+        "options": [
+          {
+            "id": "O_QUE_E_MAPA",
+            "label": "O que é o Mapa Cabalístico?"
+          },
+          {
+            "id": "START_MAP",
+            "label": "QUERO FAZER MEU MAPA"
+          }
+        ],
+        "timestamp": "2026-08-14T01:28:58.502Z"
+      },
+      {
+        "id": "user-1786670965659-z3qa",
+        "sender": "user",
+        "text": "O que é o Mapa Cabalístico?",
+        "timestamp": "2026-08-14T01:29:25.659Z"
+      },
+      {
+        "id": "kael-1786670965659-l14e",
+        "sender": "kael",
+        "text": "O Mapa Cabalístico é um retrato numérico e espiritual da sua alma, desenhado a partir da sua data de nascimento e do seu nome original.\n\nEle se baseia na sabedoria milenar da Cabala e da Numerologia Cabalística. Cada letra do seu nome possui uma frequência energética e um valor numérico do alfabeto hebraico, enquanto a sua data de nascimento marca o momento exato da sua escolha de encarnação. Ao cruzar esses dados com a Árvore da Vida e seus arquétipos, o mapa decodifica o seu 'código de nascença'.\n\nO que ele te entrega:\n\nClareza de quem você é:\nDecodifica sua essência, seus talentos ocultos e a força da sua personalidade.\n\nUm norte para a sua jornada:\nIlumina seu propósito de vida, sua vocação e os caminhos de maior realização.\n\nTransformação interior:\nMapeia bloqueios invisíveis, ciclos repetitivos e os aprendizados necessários para o seu crescimento.\n\nDeseja fazer seu mapa?",
+        "options": [
+          {
+            "id": "START_MAP",
+            "label": "Sim, quero meu mapa"
+          },
+          {
+            "id": "BACK",
+            "label": "Voltar"
+          }
+        ],
+        "timestamp": "2026-08-14T01:29:25.659Z"
+      },
+      {
+        "id": "user-1786671026373-ftf7",
+        "sender": "user",
+        "text": "Sim, quero meu mapa",
+        "timestamp": "2026-08-14T01:30:26.373Z"
+      },
+      {
+        "id": "kael-1786671026373-kdrp",
+        "sender": "kael",
+        "text": "Perfeito. Vamos preparar seu mapa.\n\nDigite seu nome completo:",
+        "options": [
+          {
+            "id": "BACK",
+            "label": "Voltar"
+          }
+        ],
+        "timestamp": "2026-08-14T01:30:26.373Z"
+      },
+      {
+        "id": "user-1786671035983-6wf0",
+        "sender": "user",
+        "text": "José Pinheiro Junior",
+        "timestamp": "2026-08-14T01:30:35.983Z"
+      },
+      {
+        "id": "kael-1786671035985-fove",
+        "sender": "kael",
+        "text": "Recebi o nome:\n\nJosé Pinheiro Junior\n\nEstá correto?",
+        "options": [
+          {
+            "id": "CONFIRM_NAME",
+            "label": "Sim"
+          },
+          {
+            "id": "CORRECT_NAME",
+            "label": "Corrigir"
+          }
+        ],
+        "timestamp": "2026-08-14T01:30:35.985Z"
+      },
+      {
+        "id": "user-1786671039876-ycxx",
+        "sender": "user",
+        "text": "Sim",
+        "timestamp": "2026-08-14T01:30:39.876Z"
+      },
+      {
+        "id": "kael-1786671039876-umyv",
+        "sender": "kael",
+        "text": "Agora informe sua data de nascimento.\n\nExemplo: 20/03/1990",
+        "options": [
+          {
+            "id": "BACK",
+            "label": "Voltar"
+          }
+        ],
+        "timestamp": "2026-08-14T01:30:39.876Z"
+      },
+      {
+        "id": "user-1786671046575-1uge",
+        "sender": "user",
+        "text": "20/03/1990",
+        "timestamp": "2026-08-14T01:30:46.575Z"
+      },
+      {
+        "id": "kael-1786671046576-y1rs",
+        "sender": "kael",
+        "text": "Sua data de nascimento é:\n\n20/03/1990\n\nEstá correta?",
+        "options": [
+          {
+            "id": "CONFIRM_DATE",
+            "label": "Sim"
+          },
+          {
+            "id": "CORRECT_DATE",
+            "label": "Corrigir"
+          }
+        ],
+        "timestamp": "2026-08-14T01:30:46.576Z"
+      },
+      {
+        "id": "user-1786671056856-dj5s",
+        "sender": "user",
+        "text": "Sim",
+        "timestamp": "2026-08-14T01:30:56.855Z"
+      },
+      {
+        "id": "kael-1786671056856-p636",
+        "sender": "kael",
+        "text": "Confira seus dados:\n\nNome: José Pinheiro Junior\n\nData de nascimento: 20/03/1990\n\nEstá tudo correto?",
+        "options": [
+          {
+            "id": "CONTINUE",
+            "label": "Sim, continuar"
+          },
+          {
+            "id": "CORRECT_NAME",
+            "label": "Corrigir nome"
+          },
+          {
+            "id": "CORRECT_DATE",
+            "label": "Corrigir data"
+          }
+        ],
+        "timestamp": "2026-08-14T01:30:56.856Z"
+      },
+      {
+        "id": "user-1786671065891-ckgb",
+        "sender": "user",
+        "text": "Sim, continuar",
+        "timestamp": "2026-08-14T01:31:05.891Z"
+      },
+      {
+        "id": "kael-1786671065891-gj7d",
+        "sender": "kael",
+        "text": "MAPA CABALÍSTICO COMPLETO\n\nDe R$ 50,00 por apenas R$ 14,90\n\nSeu Mapa Cabalístico personalizado para José Pinheiro Junior está disponível na promoção oficial de R$ 14,90.",
+        "options": [
+          {
+            "id": "PAY",
+            "label": "Quero pagar"
+          },
+          {
+            "id": "BACK",
+            "label": "Voltar"
+          }
+        ],
+        "timestamp": "2026-08-14T01:31:05.891Z"
+      },
+      {
+        "id": "user-1786671071329-66ms",
+        "sender": "user",
+        "text": "Quero pagar",
+        "timestamp": "2026-08-14T01:31:11.329Z"
+      },
+      {
+        "id": "kael-1786671071329-pxhi",
+        "sender": "kael",
+        "text": "Para realizar o pagamento:\n\nValor: R$ 14,90\n\nVocê também pode escanear o QR Code para realizar o pagamento.",
+        "options": [
+          {
+            "id": "BACK",
+            "label": "Voltar"
+          }
+        ],
+        "timestamp": "2026-08-14T01:31:11.329Z"
+      },
+      {
+        "id": "kael-1786671089487-6",
+        "sender": "kael",
+        "text": "Pagamento confirmado com sucesso.\n\nAgora vou iniciar a elaboração do seu Mapa Numerológico Cabalístico.\n\nEsse processo leva apenas alguns instantes, pois cada análise é preparada exclusivamente para você.",
+        "timestamp": "2026-08-14T01:31:29.487Z"
+      },
+      {
+        "id": "kael-1786671119116-7",
+        "sender": "kael",
+        "text": "Seu Mapa Cabalístico foi preparado e enviado com sucesso.\n\nObrigado pela confiança.",
+        "options": [
+          {
+            "id": "NEW_MAP",
+            "label": "Fazer outro mapa"
+          },
+          {
+            "id": "RESET_START",
+            "label": "Voltar para o início"
+          }
+        ],
+        "pdfUrl": "/api/pdf/MAP-8PZGHV",
+        "timestamp": "2026-08-14T01:31:59.116Z"
+      },
+      {
+        "id": "user-1786671144326-yk1n",
+        "sender": "user",
+        "text": "Fazer outro mapa",
+        "timestamp": "2026-08-14T01:32:24.326Z"
+      },
+      {
+        "id": "kael-1786671144326-vbzd",
+        "sender": "kael",
+        "text": "Perfeito. Vamos preparar seu mapa.\n\nDigite seu nome completo:",
+        "options": [
+          {
+            "id": "BACK",
+            "label": "Voltar"
+          }
+        ],
+        "timestamp": "2026-08-14T01:32:24.326Z"
+      },
+      {
+        "id": "user-1786671146886-4a2g",
+        "sender": "user",
+        "text": "Voltar para o início",
+        "timestamp": "2026-08-14T01:32:26.886Z"
+      },
+      {
+        "id": "kael-1786671146886-cg2o",
+        "sender": "kael",
+        "text": "Olá! Eu sou o Kael. Que bom ter você aqui!\n\nJá pensou receber em suas mãos o mapa numérico e espiritual da sua vida?\n\nA partir do seu nome e data de nascimento, o Mapa Cabalístico revela seus caminhos, desafios e o seu propósito de vida.\n\nPosso te ajudar a conhecer e solicitar o seu mapa agora mesmo.\n\nEscolha uma opção:",
+        "options": [
+          {
+            "id": "O_QUE_E_MAPA",
+            "label": "O que é o Mapa Cabalístico?"
+          },
+          {
+            "id": "START_MAP",
+            "label": "QUERO FAZER MEU MAPA"
+          }
+        ],
+        "timestamp": "2026-08-14T01:32:26.886Z"
+      }
+    ],
+    "paymentStatus": "pendente",
+    "messageCount": 0,
+    "offTopicCount": 0,
+    "lastInteractionAt": "2026-08-14T01:32:26.886Z",
+    "previousState": "AGUARDANDO_NOME",
+    "stateHistory": [
+      "MENU_PRINCIPAL",
+      "O_QUE_E_MAPA",
+      "AGUARDANDO_NOME",
+      "CONFIRMANDO_NOME",
+      "AGUARDANDO_DATA",
+      "CONFIRMANDO_DATA",
+      "CONFIRMANDO_DADOS",
+      "OFERTA_PAGAMENTO",
+      "POS_VENDA",
+      "AGUARDANDO_NOME"
+    ]
+  },
+  "test-1786672022701": {
+    "sessionId": "test-1786672022701",
+    "currentState": "MENU_PRINCIPAL",
+    "messages": [
+      {
+        "id": "kael-1786672022847-init",
+        "sender": "kael",
+        "text": "Olá! Eu sou o Kael. Que bom ter você aqui!\n\nJá pensou receber em suas mãos o mapa numérico e espiritual da sua vida?\n\nA partir do seu nome e data de nascimento, o Mapa Cabalístico revela seus caminhos, desafios e o seu propósito de vida.\n\nPosso te ajudar a conhecer e solicitar o seu mapa agora mesmo.\n\nEscolha uma opção:",
+        "options": [
+          {
+            "id": "O_QUE_E_MAPA",
+            "label": "O que é o Mapa Cabalístico?"
+          },
+          {
+            "id": "START_MAP",
+            "label": "QUERO FAZER MEU MAPA"
+          }
+        ],
+        "timestamp": "2026-08-14T01:47:02.847Z"
+      },
+      {
+        "id": "user-1786672022859-ro5x",
+        "sender": "user",
+        "text": "QUERO FAZER MEU MAPA",
+        "timestamp": "2026-08-14T01:47:02.859Z"
+      },
+      {
+        "id": "kael-1786672022859-symh",
+        "sender": "kael",
+        "text": "Perfeito. Vamos preparar seu mapa.\n\nDigite seu nome completo:",
+        "options": [
+          {
+            "id": "BACK",
+            "label": "Voltar"
+          }
+        ],
+        "timestamp": "2026-08-14T01:47:02.859Z"
+      },
+      {
+        "id": "user-1786672022863-ng9y",
+        "sender": "user",
+        "text": "Carlos Silva",
+        "timestamp": "2026-08-14T01:47:02.863Z"
+      },
+      {
+        "id": "kael-1786672022863-5ip5",
+        "sender": "kael",
+        "text": "Recebi o nome:\n\nCarlos Silva\n\nEstá correto?",
+        "options": [
+          {
+            "id": "CONFIRM_NAME",
+            "label": "Sim"
+          },
+          {
+            "id": "CORRECT_NAME",
+            "label": "Corrigir"
+          }
+        ],
+        "timestamp": "2026-08-14T01:47:02.863Z"
+      },
+      {
+        "id": "user-1786672022868-4lsb",
+        "sender": "user",
+        "text": "Sim",
+        "timestamp": "2026-08-14T01:47:02.868Z"
+      },
+      {
+        "id": "kael-1786672022868-n7nj",
+        "sender": "kael",
+        "text": "Agora informe sua data de nascimento.\n\nExemplo: 20/03/1990",
+        "options": [
+          {
+            "id": "BACK",
+            "label": "Voltar"
+          }
+        ],
+        "timestamp": "2026-08-14T01:47:02.868Z"
+      },
+      {
+        "id": "user-1786672022873-5354",
+        "sender": "user",
+        "text": "15/08/1985",
+        "timestamp": "2026-08-14T01:47:02.873Z"
+      },
+      {
+        "id": "kael-1786672022873-jsb5",
+        "sender": "kael",
+        "text": "Sua data de nascimento é:\n\n15/08/1985\n\nEstá correta?",
+        "options": [
+          {
+            "id": "CONFIRM_DATE",
+            "label": "Sim"
+          },
+          {
+            "id": "CORRECT_DATE",
+            "label": "Corrigir"
+          }
+        ],
+        "timestamp": "2026-08-14T01:47:02.873Z"
+      },
+      {
+        "id": "user-1786672022877-3skb",
+        "sender": "user",
+        "text": "Sim",
+        "timestamp": "2026-08-14T01:47:02.877Z"
+      },
+      {
+        "id": "kael-1786672022877-gm9u",
+        "sender": "kael",
+        "text": "Confira seus dados:\n\nNome: Carlos Silva\n\nData de nascimento: 15/08/1985\n\nEstá tudo correto?",
+        "options": [
+          {
+            "id": "CONTINUE",
+            "label": "Sim, continuar"
+          },
+          {
+            "id": "CORRECT_NAME",
+            "label": "Corrigir nome"
+          },
+          {
+            "id": "CORRECT_DATE",
+            "label": "Corrigir data"
+          }
+        ],
+        "timestamp": "2026-08-14T01:47:02.877Z"
+      },
+      {
+        "id": "user-1786672022882-ne78",
+        "sender": "user",
+        "text": "Sim, continuar",
+        "timestamp": "2026-08-14T01:47:02.882Z"
+      },
+      {
+        "id": "kael-1786672022882-hdyj",
+        "sender": "kael",
+        "text": "MAPA CABALÍSTICO COMPLETO\n\nDe R$ 50,00 por apenas R$ 14,90\n\nSeu Mapa Cabalístico personalizado para Carlos Silva está disponível na promoção oficial de R$ 14,90.",
+        "options": [
+          {
+            "id": "PAY",
+            "label": "Quero pagar"
+          },
+          {
+            "id": "BACK",
+            "label": "Voltar"
+          }
+        ],
+        "timestamp": "2026-08-14T01:47:02.882Z"
+      },
+      {
+        "id": "user-1786672022886-f7g3",
+        "sender": "user",
+        "text": "Quero pagar",
+        "timestamp": "2026-08-14T01:47:02.886Z"
+      },
+      {
+        "id": "kael-1786672022886-49jw",
+        "sender": "kael",
+        "text": "Pagamento via PIX\n\nValor:\nR$ 14,90",
+        "options": [
+          {
+            "id": "RESET_START",
+            "label": "← Voltar"
+          }
+        ],
+        "timestamp": "2026-08-14T01:47:02.886Z"
+      },
+      {
+        "id": "user-1786672022897-r58u",
+        "sender": "user",
+        "text": "← Voltar",
+        "timestamp": "2026-08-14T01:47:02.897Z"
+      },
+      {
+        "id": "kael-1786672022897-siib",
+        "sender": "kael",
+        "text": "Olá! Eu sou o Kael. Que bom ter você aqui!\n\nJá pensou receber em suas mãos o mapa numérico e espiritual da sua vida?\n\nA partir do seu nome e data de nascimento, o Mapa Cabalístico revela seus caminhos, desafios e o seu propósito de vida.\n\nPosso te ajudar a conhecer e solicitar o seu mapa agora mesmo.\n\nEscolha uma opção:",
+        "options": [
+          {
+            "id": "O_QUE_E_MAPA",
+            "label": "O que é o Mapa Cabalístico?"
+          },
+          {
+            "id": "START_MAP",
+            "label": "QUERO FAZER MEU MAPA"
+          }
+        ],
+        "timestamp": "2026-08-14T01:47:02.897Z"
+      }
+    ],
+    "paymentStatus": "pendente",
+    "messageCount": 0,
+    "offTopicCount": 0,
+    "lastInteractionAt": "2026-08-14T01:47:02.897Z",
+    "previousState": "AGUARDANDO_PAGAMENTO",
+    "stateHistory": [
+      "MENU_PRINCIPAL",
+      "AGUARDANDO_NOME",
+      "CONFIRMANDO_NOME",
+      "AGUARDANDO_DATA",
+      "CONFIRMANDO_DATA",
+      "CONFIRMANDO_DADOS",
+      "OFERTA_PAGAMENTO",
+      "AGUARDANDO_PAGAMENTO"
+    ]
+  }
+}

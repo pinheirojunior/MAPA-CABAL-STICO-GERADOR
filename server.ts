@@ -13,6 +13,7 @@ import { runEngineTests } from './src/numerology/engine.test.js';
 import {
   createKaelSession,
   handleKaelUserMessage,
+  getOptionsForState,
   KAEL_MESSAGES
 } from './src/services/kaelService.js';
 import { runKaelNLUTests } from './src/services/kaelService.test.js';
@@ -34,6 +35,7 @@ const PDFS_DIR = path.join(DATA_DIR, 'pdfs');
 const ORDERS_FILE = path.join(DATA_DIR, 'orders.json');
 const MAPS_FILE = path.join(DATA_DIR, 'maps.json');
 const KAEL_FILE = path.join(DATA_DIR, 'kael_sessions.json');
+const PIX_CONFIG_FILE = path.join(DATA_DIR, 'pix_config.json');
 
 // Garante que o diretório data, pdfs e os arquivos JSON existam
 if (!fs.existsSync(DATA_DIR)) {
@@ -50,6 +52,35 @@ if (!fs.existsSync(MAPS_FILE)) {
 }
 if (!fs.existsSync(KAEL_FILE)) {
   fs.writeFileSync(KAEL_FILE, JSON.stringify({}, null, 2));
+}
+const DEFAULT_PIX_CODE = '00020101021126580014br.gov.bcb.pix01360efa1471-55ad-4ce9-9f7a-6cd5d173525c5204000053039865802BR5913JOSE P JUNIOR6009FORTALEZA62070503***6304F837';
+
+if (!fs.existsSync(PIX_CONFIG_FILE)) {
+  fs.writeFileSync(PIX_CONFIG_FILE, JSON.stringify({ pixKey: DEFAULT_PIX_CODE }, null, 2));
+}
+
+// Função auxiliar para leitura e escrita da chave PIX
+function readPixConfig(): { pixKey: string } {
+  try {
+    if (fs.existsSync(PIX_CONFIG_FILE)) {
+      const data = fs.readFileSync(PIX_CONFIG_FILE, 'utf-8');
+      const parsed = JSON.parse(data);
+      if (parsed && parsed.pixKey) {
+        return parsed;
+      }
+    }
+  } catch (err) {
+    console.error('Erro ao ler pix_config.json:', err);
+  }
+  return { pixKey: DEFAULT_PIX_CODE };
+}
+
+function savePixConfig(config: { pixKey: string }): void {
+  try {
+    fs.writeFileSync(PIX_CONFIG_FILE, JSON.stringify(config, null, 2), 'utf-8');
+  } catch (err) {
+    console.error('Erro ao salvar pix_config.json:', err);
+  }
 }
 
 // Funções auxiliares para manipulação de sessões do Kael no JSON
@@ -181,10 +212,10 @@ async function startServer() {
   // 2. Enviar Mensagem ao Kael
   app.post('/api/kael/chat', async (req: Request, res: Response) => {
     try {
-      const { sessionId, message } = req.body;
+      const { sessionId, message, actionId } = req.body;
 
-      if (!sessionId || !message || typeof message !== 'string') {
-        return res.status(400).json({ error: 'Sessão e mensagem válidas são obrigatórias.' });
+      if (!sessionId) {
+        return res.status(400).json({ error: 'Sessão é obrigatória.' });
       }
 
       const sessions = readKaelSessions();
@@ -194,33 +225,41 @@ async function startServer() {
         session = createKaelSession(sessionId);
       }
 
-      const apiKey = process.env.GEMINI_API_KEY;
-      let aiFn: ((prompt: string) => Promise<string>) | undefined = undefined;
-
-      if (apiKey) {
-        const ai = new GoogleGenAI({
-          apiKey,
-          httpOptions: { headers: { 'User-Agent': 'aistudio-build' } }
-        });
-        aiFn = async (prompt: string) => {
-          const resp = await ai.models.generateContent({
-            model: 'gemini-3.6-flash',
-            contents: prompt,
-            config: { temperature: 0.6 }
-          });
-          return resp.text || '';
-        };
-      }
-
-      const { updatedSession, newMessages } = await handleKaelUserMessage(session, message, aiFn);
+      const pixConfig = readPixConfig();
+      const { updatedSession, newMessages } = await handleKaelUserMessage(
+        session,
+        message || '',
+        undefined,
+        actionId,
+        pixConfig.pixKey
+      );
       sessions[sessionId] = updatedSession;
       saveKaelSessions(sessions);
 
-      return res.json({ success: true, session: updatedSession, newMessages });
+      return res.json({ success: true, session: updatedSession, newMessages, pixKey: pixConfig.pixKey });
     } catch (error) {
       console.error('Erro no chat Kael:', error);
       return res.status(500).json({ error: 'Erro ao processar mensagem com o Kael.' });
     }
+  });
+
+  // === ROTAS ADMINISTRATIVAS PIX ===
+
+  // GET /api/admin/pix-config
+  app.get('/api/admin/pix-config', (req: Request, res: Response) => {
+    const config = readPixConfig();
+    return res.json(config);
+  });
+
+  // POST /api/admin/pix-config
+  app.post('/api/admin/pix-config', (req: Request, res: Response) => {
+    const { pixKey } = req.body;
+    if (!pixKey || typeof pixKey !== 'string' || !pixKey.trim()) {
+      return res.status(400).json({ error: 'Chave PIX inválida.' });
+    }
+    const cleanKey = pixKey.trim();
+    savePixConfig({ pixKey: cleanKey });
+    return res.json({ success: true, pixKey: cleanKey });
   });
 
   // 3. Simular/Confirmar Pagamento do Kael e gerar Mapa + PDF com os motores EXISTENTES
@@ -265,28 +304,19 @@ async function startServer() {
 
       session.mapId = mapData.id;
       session.pdfUrl = `/api/pdf/${mapData.id}`;
-      session.currentState = 'PDF_PRONTO';
+      session.currentState = 'POS_VENDA';
+      session.mapDelivered = true;
+      session.conversationMode = 'SUPORTE_MAPA';
 
       const msg7: KaelMessage = {
         id: `kael-${Date.now()}-7`,
         sender: 'kael',
         text: KAEL_MESSAGES.MSG_7,
+        options: getOptionsForState('POS_VENDA'),
         pdfUrl: session.pdfUrl,
         timestamp: new Date().toISOString()
       };
       session.messages.push(msg7);
-
-      // 3. Transição para Pós-venda e Suporte
-      session.currentState = 'POS_VENDA';
-      session.mapDelivered = true;
-      session.conversationMode = 'SUPORTE_MAPA';
-      const msg8: KaelMessage = {
-        id: `kael-${Date.now()}-8`,
-        sender: 'kael',
-        text: KAEL_MESSAGES.MSG_8,
-        timestamp: new Date().toISOString()
-      };
-      session.messages.push(msg8);
 
       sessions[sessionId] = session;
       saveKaelSessions(sessions);

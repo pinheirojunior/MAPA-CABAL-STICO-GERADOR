@@ -1,12 +1,13 @@
 import React from 'react';
-import { Sparkles, Compass } from 'lucide-react';
+import { Sparkles, Compass, Settings } from 'lucide-react';
 
 interface HeaderProps {
   onReset?: () => void;
   activeMapId?: string | null;
+  onOpenPixAdmin?: () => void;
 }
 
-export const Header: React.FC<HeaderProps> = ({ onReset, activeMapId }) => {
+export const Header: React.FC<HeaderProps> = ({ onReset, activeMapId, onOpenPixAdmin }) => {
   return (
     <header className="sticky top-0 z-40 bg-[#0d0b18]/90 backdrop-blur-md border-b border-purple-900/40 px-4 py-3">
       <div className="max-w-5xl mx-auto flex items-center justify-between">
@@ -30,6 +31,17 @@ export const Header: React.FC<HeaderProps> = ({ onReset, activeMapId }) => {
         </button>
 
         <div className="flex items-center gap-2">
+          {onOpenPixAdmin && (
+            <button
+              onClick={onOpenPixAdmin}
+              title="Configurar Chave PIX (Admin)"
+              className="text-xs bg-slate-800/80 hover:bg-slate-700 text-amber-300 border border-amber-500/30 px-3 py-1.5 rounded-xl font-medium flex items-center gap-1.5 transition-colors shadow-sm"
+            >
+              <Settings className="w-3.5 h-3.5 text-amber-400" />
+              <span>Chave PIX (Admin)</span>
+            </button>
+          )}
+
           {activeMapId ? (
             <span className="text-xs bg-amber-500/10 text-amber-300 border border-amber-500/30 px-2.5 py-1 rounded-full font-mono font-medium flex items-center gap-1.5">
               <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />

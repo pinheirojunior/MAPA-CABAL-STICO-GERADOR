@@ -1,20 +1,34 @@
 export type KaelState =
-  | 'PRIMEIRO_CONTATO'
-  | 'AGUARDANDO_NOME_DATA'
-  | 'DADOS_RECEBIDOS'
-  | 'CONFIRMACAO_DOS_DADOS'
+  | 'MENU_PRINCIPAL'
+  | 'O_QUE_E_MAPA'
+  | 'COMO_FUNCIONA'
+  | 'JA_COMPREI'
+  | 'AGUARDANDO_NOME'
+  | 'CONFIRMANDO_NOME'
+  | 'AGUARDANDO_DATA'
+  | 'CONFIRMANDO_DATA'
+  | 'CONFIRMANDO_DADOS'
+  | 'OFERTA_PAGAMENTO'
   | 'AGUARDANDO_PAGAMENTO'
   | 'PAGAMENTO_CONFIRMADO'
+  | 'GERANDO_MAPA'
   | 'MAPA_EM_PROCESSAMENTO'
   | 'PDF_PRONTO'
   | 'POS_VENDA'
+  | 'CANCELADO'
   | 'CONVERSA_ENCERRADA';
+
+export interface KaelOption {
+  id: string;
+  label: string;
+}
 
 export interface KaelMessage {
   id: string;
   sender: 'kael' | 'user' | 'system';
   text: string;
   timestamp: string;
+  options?: KaelOption[];
   pdfUrl?: string;
   pixCode?: string;
 }
@@ -24,6 +38,8 @@ export interface KaelSession {
   fullName?: string;
   birthDate?: string;
   currentState: KaelState;
+  previousState?: KaelState;
+  stateHistory?: KaelState[];
   messages: KaelMessage[];
   paymentStatus: 'pendente' | 'pago';
   orderId?: string;
@@ -45,6 +61,7 @@ export interface KaelSession {
   pendingCorrection?: 'fullName' | 'birthDate' | 'both' | null;
   subState?: 'CORRIGINDO_NOME' | 'CORRIGINDO_DATA' | 'AGUARDANDO_QUAL_DADO' | null;
   pendingUserQuestion?: boolean;
+  lastProcessedMessageId?: string;
 }
 
 export interface PaymentService {

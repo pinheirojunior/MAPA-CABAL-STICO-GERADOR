@@ -5,6 +5,7 @@ import { NumerologyForm } from './components/NumerologyForm';
 import { ProcessingScreen } from './components/ProcessingScreen';
 import { MapPreview } from './components/MapPreview';
 import { KaelChat } from './components/KaelChat';
+import { AdminPixModal } from './components/AdminPixModal';
 import { Footer } from './components/Footer';
 import { FullCabalisticMap } from './types/numerology';
 import { MessageSquare, Sparkles, FileText } from 'lucide-react';
@@ -16,6 +17,7 @@ export default function App() {
   const [mapData, setMapData] = useState<FullCabalisticMap | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isPixAdminOpen, setIsPixAdminOpen] = useState(false);
 
   const handleStartOrder = () => {
     if (mode === 'kael') {
@@ -69,7 +71,11 @@ export default function App() {
   return (
     <div className="min-h-screen bg-[#0b0914] text-slate-100 flex flex-col justify-between selection:bg-amber-500 selection:text-slate-950 font-sans">
       <div>
-        <Header onReset={handleReset} activeMapId={mapData?.id} />
+        <Header
+          onReset={handleReset}
+          activeMapId={mapData?.id}
+          onOpenPixAdmin={() => setIsPixAdminOpen(true)}
+        />
 
         {/* Seletor de Modo: Kael Assistente vs Gerador Direto */}
         <div className="bg-slate-900/80 border-b border-amber-500/20 py-2.5 px-4 backdrop-blur-md sticky top-[61px] z-30 shadow-md">
@@ -121,7 +127,7 @@ export default function App() {
           )}
 
           {mode === 'kael' ? (
-            <KaelChat />
+            <KaelChat onOpenPixAdmin={() => setIsPixAdminOpen(true)} />
           ) : (
             <>
               {step === 'input' && (
@@ -143,8 +149,18 @@ export default function App() {
         </main>
       </div>
 
+      <AdminPixModal
+        isOpen={isPixAdminOpen}
+        onClose={() => setIsPixAdminOpen(false)}
+        onResetChat={() => {
+          const resetBtn = document.getElementById('btn-reset-kael-chat');
+          if (resetBtn) {
+            resetBtn.click();
+          }
+        }}
+      />
+
       <Footer />
     </div>
   );
 }
-

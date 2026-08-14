@@ -265,6 +265,52 @@ export async function generateMapPDF(orderId: string, mapData: CabalisticMapData
         }
       };
 
+      // HELPER: Renderização determinística e padronizada do componente gráfico do indicador (Badge)
+      const renderBadgeGraphic = (
+        targetDoc: any,
+        badgeX: number,
+        badgeY: number,
+        badgeW: number,
+        badgeH: number,
+        badgeValue: string | number,
+        accentColor: string,
+        borderColor: string
+      ) => {
+        targetDoc.save();
+
+        // Quadrado colorido do badge
+        targetDoc.rect(badgeX, badgeY, badgeW, badgeH)
+                 .fill(accentColor)
+                 .strokeColor(borderColor)
+                 .lineWidth(1)
+                 .stroke();
+
+        // Formatação do valor do número e cálculo dinâmico de fonte
+        const valStr = String(badgeValue).trim();
+        let numFontSize = 24;
+        if (valStr.length >= 3) {
+          numFontSize = 18;
+        }
+        if (valStr.length >= 4) {
+          numFontSize = 14;
+        }
+
+        // Centralização exata vertical e horizontal dentro do quadrado do badge
+        targetDoc.fontSize(numFontSize).font('Helvetica-Bold');
+        const numH = targetDoc.heightOfString(valStr, { width: badgeW, align: 'center' });
+        const numY = badgeY + (badgeH - numH) / 2;
+
+        targetDoc.fillColor('#ffffff')
+                 .fontSize(numFontSize)
+                 .font('Helvetica-Bold')
+                 .text(valStr, badgeX, numY, {
+                   width: badgeW,
+                   align: 'center'
+                 });
+
+        targetDoc.restore();
+      };
+
       const renderCardBox = (options: {
         title: string;
         badgeValue?: string | number;
@@ -337,35 +383,7 @@ export async function generateMapPDF(orderId: string, mapData: CabalisticMapData
 
           if (hasBadge) {
             const badgeY = boxY + topPad;
-
-            // Fundo e borda do Badge
-            doc.rect(badgeX, badgeY, badgeW, badgeH)
-               .fill(options.accentColor)
-               .strokeColor(options.borderColor)
-               .lineWidth(1)
-               .stroke();
-
-            // Formatação do número e cálculo dinâmico de fonte para couber com folga
-            const valStr = String(options.badgeValue).trim();
-            let numFontSize = 24;
-            if (valStr.length >= 3) {
-              numFontSize = 18;
-            } else if (valStr.length >= 4) {
-              numFontSize = 14;
-            }
-
-            // Centralização exata vertical e horizontal dentro da caixa do badge
-            doc.fontSize(numFontSize).font('Helvetica-Bold');
-            const numH = doc.heightOfString(valStr, { width: badgeW, align: 'center' });
-            const numY = badgeY + (badgeH - numH) / 2;
-
-            doc.fillColor('#ffffff')
-               .fontSize(numFontSize)
-               .font('Helvetica-Bold')
-               .text(valStr, badgeX, numY, {
-                 width: badgeW,
-                 align: 'center'
-               });
+            renderBadgeGraphic(doc, badgeX, badgeY, badgeW, badgeH, options.badgeValue!, options.accentColor, options.borderColor);
           }
 
           const textY = boxY + topPad + titleH + gap;
@@ -383,45 +401,45 @@ export async function generateMapPDF(orderId: string, mapData: CabalisticMapData
           layoutTracker.register('card_box', currentPage, leftMargin, boxY, contentWidth, boxH);
           cursorY = boxY + boxH + spaceAfter;
         } else {
-          doc.fontSize(15.5).font('Helvetica-Bold');
-          const titleMeasuredH = doc.heightOfString(cleanTitle, { width: contentWidth, align: 'left' });
+          // Para textos muito longos (> 720pt), renderiza o cabeçalho do card (com o mesmo componente gráfico do badge) e fluxo contínuo
+          const headerH = Math.max(topPad + badgeH + botPad, topPad + titleH + botPad);
 
-          if (cursorY + titleMeasuredH + 40 > maxY && cursorY > marginTop) {
+          if (cursorY + headerH > maxY && cursorY > marginTop) {
             doc.addPage();
           }
 
           let currentPage = doc.bufferedPageRange().count - 1;
           cursorY = layoutTracker.ensureNoOverlap(currentPage, cursorY, 0);
+          const headerY = cursorY;
 
           doc.save();
+
+          // Fundo e acento do cabeçalho do card
+          doc.rect(leftMargin, headerY, contentWidth, headerH)
+             .fill(options.bgColor)
+             .strokeColor(options.borderColor)
+             .lineWidth(1)
+             .stroke();
+
+          doc.rect(leftMargin, headerY, 5, headerH)
+             .fill(options.accentColor);
+
+          // Título do Card
           doc.fillColor(options.titleColor)
              .fontSize(15.5)
              .font('Helvetica-Bold')
-             .text(cleanTitle, leftMargin, cursorY, { width: contentWidth, align: 'left' });
+             .text(cleanTitle, leftMargin + 16, headerY + topPad, { width: textWidth, align: 'left' });
+
+          // Badge
+          if (hasBadge) {
+            const badgeY = headerY + topPad;
+            renderBadgeGraphic(doc, badgeX, badgeY, badgeW, badgeH, options.badgeValue!, options.accentColor, options.borderColor);
+          }
+
           doc.restore();
 
-          layoutTracker.register('card_title', currentPage, leftMargin, cursorY, contentWidth, titleMeasuredH);
-          cursorY = Math.max(doc.y, cursorY + titleMeasuredH) + 8;
-
-          if (hasBadge) {
-            currentPage = doc.bufferedPageRange().count - 1;
-            cursorY = layoutTracker.ensureNoOverlap(currentPage, cursorY, 0);
-
-            doc.save();
-            doc.rect(leftMargin, cursorY, 200, 32)
-               .fill(options.bgColor)
-               .strokeColor(options.borderColor)
-               .lineWidth(1)
-               .stroke();
-            doc.fillColor(options.titleColor)
-               .fontSize(12)
-               .font('Helvetica-Bold')
-               .text(`Vibração Mestra: ${options.badgeValue}`, leftMargin + 10, cursorY + 8);
-            doc.restore();
-
-            layoutTracker.register('card_badge', currentPage, leftMargin, cursorY, 200, 32);
-            cursorY += 40;
-          }
+          layoutTracker.register('card_header', currentPage, leftMargin, headerY, contentWidth, headerH);
+          cursorY = headerY + headerH + 12;
 
           renderParagraph(cleanBody, spaceAfter);
         }
