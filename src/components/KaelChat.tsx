@@ -3,8 +3,6 @@ import { MessageSquare, Send, RefreshCw, CheckCircle2, FileDown, Sparkles, User,
 import QRCode from 'qrcode';
 import { KaelSession, KaelMessage, KaelState, KaelOption } from '../types/kael';
 
-export const OFFICIAL_PIX_CODE = '00020101021126580014br.gov.bcb.pix01360efa1471-55ad-4ce9-9f7a-6cd5d173525c5204000053039865802BR5913JOSE P JUNIOR6009FORTALEZA62070503***6304F837';
-
 interface KaelChatProps {
   onClose?: () => void;
   onOpenPixAdmin?: () => void;
@@ -19,7 +17,6 @@ export function KaelChat({ onClose, onOpenPixAdmin }: KaelChatProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [isGeneratingMap, setIsGeneratingMap] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [pixKey, setPixKey] = useState<string>(OFFICIAL_PIX_CODE);
   const [qrCodeDataUrl, setQrCodeDataUrl] = useState<string>('');
   const [copied, setCopied] = useState<boolean>(false);
 
@@ -30,29 +27,31 @@ export function KaelChat({ onClose, onOpenPixAdmin }: KaelChatProps) {
   useEffect(() => {
     localStorage.setItem('kael_session_id', sessionId);
     loadSession(sessionId);
-    fetchPixConfig();
   }, [sessionId]);
 
-  // Gera o QR Code com alta resolução e nitidez a partir da chave PIX do Asaas ou contingência
+  // Gera o QR Code com alta resolução exclusivamente a partir do PIX dinâmico do Asaas
   useEffect(() => {
     if (session?.qrCodeImage) {
       setQrCodeDataUrl(session.qrCodeImage);
       return;
     }
 
-    const code = session?.pixCode || pixKey || OFFICIAL_PIX_CODE;
-    QRCode.toDataURL(code, {
-      width: 400,
-      margin: 2,
-      errorCorrectionLevel: 'M',
-      color: {
-        dark: '#000000',
-        light: '#ffffff'
-      }
-    })
-      .then(url => setQrCodeDataUrl(url))
-      .catch(err => console.error('Erro ao gerar QR Code PIX:', err));
-  }, [pixKey, session?.pixCode, session?.qrCodeImage]);
+    if (session?.pixCode) {
+      QRCode.toDataURL(session.pixCode, {
+        width: 400,
+        margin: 2,
+        errorCorrectionLevel: 'M',
+        color: {
+          dark: '#000000',
+          light: '#ffffff'
+        }
+      })
+        .then(url => setQrCodeDataUrl(url))
+        .catch(err => console.error('Erro ao gerar QR Code PIX:', err));
+    } else {
+      setQrCodeDataUrl('');
+    }
+  }, [session?.pixCode, session?.qrCodeImage]);
 
   // Scroll automático para a última mensagem
   useEffect(() => {
@@ -103,18 +102,6 @@ export function KaelChat({ onClose, onOpenPixAdmin }: KaelChatProps) {
     };
   }, [session?.currentState, session?.paymentStatus, sessionId]);
 
-  const fetchPixConfig = async () => {
-    try {
-      const res = await fetch('/api/admin/pix-config');
-      const data = await res.json();
-      if (data.pixKey) {
-        setPixKey(data.pixKey);
-      }
-    } catch (err) {
-      console.error('Erro ao buscar chave PIX:', err);
-    }
-  };
-
   const loadSession = async (sid: string) => {
     try {
       setIsLoading(true);
@@ -127,9 +114,6 @@ export function KaelChat({ onClose, onOpenPixAdmin }: KaelChatProps) {
       const data = await res.json();
       if (res.ok && data.success) {
         setSession(data.session);
-        if (data.session?.pixCode) {
-          setPixKey(data.session.pixCode);
-        }
       } else {
         setError(data.error || 'Erro ao carregar sessão com o Kael.');
       }
@@ -175,9 +159,6 @@ export function KaelChat({ onClose, onOpenPixAdmin }: KaelChatProps) {
 
       if (res.ok && data.success) {
         setSession(data.session);
-        if (data.pixKey) {
-          setPixKey(data.pixKey);
-        }
       } else {
         setError(data.error || 'Erro ao processar opção selecionada.');
       }
@@ -208,9 +189,6 @@ export function KaelChat({ onClose, onOpenPixAdmin }: KaelChatProps) {
 
       if (res.ok && data.success) {
         setSession(data.session);
-        if (data.pixKey) {
-          setPixKey(data.pixKey);
-        }
       } else {
         setError(data.error || 'Erro ao enviar mensagem.');
       }
@@ -249,8 +227,9 @@ export function KaelChat({ onClose, onOpenPixAdmin }: KaelChatProps) {
     }
   };
 
-  const handleCopyPixKey = (keyToCopy: string) => {
-    const targetCode = keyToCopy || session?.pixCode || pixKey || OFFICIAL_PIX_CODE;
+  const handleCopyPixKey = (keyToCopy?: string) => {
+    const targetCode = keyToCopy || session?.pixCode;
+    if (!targetCode) return;
     navigator.clipboard.writeText(targetCode);
     setCopied(true);
     setTimeout(() => setCopied(false), 3500);
@@ -309,7 +288,7 @@ export function KaelChat({ onClose, onOpenPixAdmin }: KaelChatProps) {
   };
 
   const badge = getStateBadge(session?.currentState);
-  const activePixCode = session?.pixCode || pixKey || OFFICIAL_PIX_CODE;
+  const activePixCode = session?.pixCode || '';
 
   return (
     <div className="max-w-4xl mx-auto my-6 px-3 sm:px-6">
@@ -501,55 +480,65 @@ export function KaelChat({ onClose, onOpenPixAdmin }: KaelChatProps) {
                         </span>
                       </div>
 
-                      {/* 3. QR Code: Centralizado, Grande, Nítido, Sem distorção */}
-                      <div className="p-3 bg-white rounded-2xl shadow-xl border-2 border-amber-500/40 my-1 inline-flex items-center justify-center">
-                        {qrCodeDataUrl ? (
-                          <img
-                            src={qrCodeDataUrl}
-                            alt="QR Code PIX R$ 14,90"
-                            className="w-48 h-48 sm:w-56 sm:h-56 object-contain rounded-xl select-none"
-                          />
-                        ) : (
-                          <div className="w-48 h-48 sm:w-56 sm:h-56 flex items-center justify-center bg-slate-50 rounded-xl">
-                            <QrCode className="w-16 h-16 text-slate-800 animate-pulse" />
+                      {activePixCode ? (
+                        <>
+                          {/* 3. QR Code: Centralizado, Grande, Nítido, Sem distorção */}
+                          <div className="p-3 bg-white rounded-2xl shadow-xl border-2 border-amber-500/40 my-1 inline-flex items-center justify-center">
+                            {qrCodeDataUrl ? (
+                              <img
+                                src={qrCodeDataUrl}
+                                alt="QR Code PIX R$ 14,90"
+                                className="w-48 h-48 sm:w-56 sm:h-56 object-contain rounded-xl select-none"
+                              />
+                            ) : (
+                              <div className="w-48 h-48 sm:w-56 sm:h-56 flex items-center justify-center bg-slate-50 rounded-xl">
+                                <QrCode className="w-16 h-16 text-slate-800 animate-pulse" />
+                              </div>
+                            )}
                           </div>
-                        )}
-                      </div>
 
-                      {/* 4. Texto */}
-                      <p className="text-xs text-slate-200 font-medium mt-3.5 mb-3 flex items-center justify-center gap-1.5">
-                        <QrCode className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-                        <span>Escaneie o QR Code no aplicativo do seu banco</span>
-                      </p>
+                          {/* 4. Texto */}
+                          <p className="text-xs text-slate-200 font-medium mt-3.5 mb-3 flex items-center justify-center gap-1.5">
+                            <QrCode className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                            <span>Escaneie o QR Code no aplicativo do seu banco</span>
+                          </p>
 
-                      {/* 5. Botão Copiar PIX */}
-                      <button
-                        onClick={() => handleCopyPixKey(activePixCode)}
-                        className={`w-full py-2.5 px-4 rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all shadow-md active:scale-95 cursor-pointer ${
-                          copied
-                            ? 'bg-emerald-600 hover:bg-emerald-500 text-white border border-emerald-400'
-                            : 'bg-gradient-to-r from-amber-500 to-yellow-400 hover:from-amber-400 hover:to-yellow-300 text-slate-950 hover:shadow-amber-500/20'
-                        }`}
-                        title="Copiar código PIX Copia e Cola"
-                      >
-                        {copied ? (
-                          <>
-                            <Check className="w-4 h-4 text-white stroke-[3]" />
-                            <span className="font-extrabold tracking-wide">PIX copiado com sucesso!</span>
-                          </>
-                        ) : (
-                          <>
-                            <Copy className="w-4 h-4 text-slate-950" />
-                            <span>📋 Copiar PIX</span>
-                          </>
-                        )}
-                      </button>
+                          {/* 5. Botão Copiar PIX */}
+                          <button
+                            onClick={() => handleCopyPixKey(activePixCode)}
+                            className={`w-full py-2.5 px-4 rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all shadow-md active:scale-95 cursor-pointer ${
+                              copied
+                                ? 'bg-emerald-600 hover:bg-emerald-500 text-white border border-emerald-400'
+                                : 'bg-gradient-to-r from-amber-500 to-yellow-400 hover:from-amber-400 hover:to-yellow-300 text-slate-950 hover:shadow-amber-500/20'
+                            }`}
+                            title="Copiar código PIX Copia e Cola"
+                          >
+                            {copied ? (
+                              <>
+                                <Check className="w-4 h-4 text-white stroke-[3]" />
+                                <span className="font-extrabold tracking-wide">PIX copiado com sucesso!</span>
+                              </>
+                            ) : (
+                              <>
+                                <Copy className="w-4 h-4 text-slate-950" />
+                                <span>📋 Copiar PIX</span>
+                              </>
+                            )}
+                          </button>
 
-                      {/* Mensagem de confirmação ao copiar */}
-                      {copied && (
-                        <div className="mt-2 text-xs font-semibold text-emerald-300 bg-emerald-950/80 border border-emerald-500/40 px-3 py-1.5 rounded-lg flex items-center justify-center gap-1.5 shadow-sm animate-fade-in w-full">
-                          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                          <span>PIX copiado com sucesso!</span>
+                          {/* Mensagem de confirmação ao copiar */}
+                          {copied && (
+                            <div className="mt-2 text-xs font-semibold text-emerald-300 bg-emerald-950/80 border border-emerald-500/40 px-3 py-1.5 rounded-lg flex items-center justify-center gap-1.5 shadow-sm animate-fade-in w-full">
+                              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                              <span>PIX copiado com sucesso!</span>
+                            </div>
+                          )}
+                        </>
+                      ) : (
+                        <div className="p-4 my-2 bg-slate-900/90 border border-amber-500/30 rounded-xl flex flex-col items-center justify-center text-center w-full">
+                          <RefreshCw className="w-6 h-6 text-amber-400 animate-spin mb-2" />
+                          <p className="text-xs font-semibold text-amber-200">Gerando cobrança PIX oficial no Asaas...</p>
+                          <p className="text-[11px] text-slate-400 mt-1">Aguarde a emissão do QR Code e código Copia e Cola dinâmicos.</p>
                         </div>
                       )}
                     </div>

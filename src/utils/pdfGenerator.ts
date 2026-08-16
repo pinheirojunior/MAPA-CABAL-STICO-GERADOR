@@ -53,6 +53,18 @@ export async function generateMapPDF(orderId: string, mapData: CabalisticMapData
 
   const filePath = path.join(pdfDir, `mapa-${orderId}.pdf`);
 
+  // ETAPA 9: Reutiliza PDF se já existente e íntegro
+  if (fs.existsSync(filePath)) {
+    try {
+      const stats = fs.statSync(filePath);
+      if (stats.size > 2000) {
+        return filePath;
+      }
+    } catch {
+      // continua para geração caso ocorra erro
+    }
+  }
+
   return new Promise((resolve, reject) => {
     try {
       const PDFDoc = (PDFDocument as any).default || PDFDocument;

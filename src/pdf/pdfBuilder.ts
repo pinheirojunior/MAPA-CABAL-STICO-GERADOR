@@ -103,6 +103,19 @@ export async function buildMapPDF(mapData: FullCabalisticMap): Promise<string> {
 
   const filePath = path.join(pdfsDir, `mapa-${mapData.id}.pdf`);
 
+  // ETAPA 9: Se o PDF já existe no disco e está íntegro, reutiliza diretamente sem reprocessar
+  if (fs.existsSync(filePath)) {
+    try {
+      const stats = fs.statSync(filePath);
+      if (stats.size > 2000) {
+        console.log(`[PDF] Reutilizando arquivo PDF existente e íntegro: ${filePath} (${stats.size} bytes)`);
+        return filePath;
+      }
+    } catch {
+      // Se houver erro de leitura do arquivo, segue com a geração
+    }
+  }
+
   return new Promise((resolve, reject) => {
     try {
       const PDFDoc = (PDFDocument as any).default || PDFDocument;

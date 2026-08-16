@@ -1,8 +1,6 @@
 import { KaelSession, KaelMessage, KaelState, KaelOption } from '../types/kael.js';
 
 // ROTEIRO E MENUS DO KAEL (SEM EMOJIS)
-export const DEFAULT_PIX_CODE = '00020101021126580014br.gov.bcb.pix01360efa1471-55ad-4ce9-9f7a-6cd5d173525c5204000053039865802BR5913JOSE P JUNIOR6009FORTALEZA62070503***6304F837';
-
 export const KAEL_MESSAGES = {
   MSG_INITIAL: `Olá! Eu sou o Kael. Que bom ter você aqui!
 
@@ -78,7 +76,7 @@ Obrigado pela confiança.`,
   MSG_FALLBACK_OPTIONS: `Para continuar, escolha uma das opções abaixo.`
 };
 
-export function getPaymentInstructionsPrompt(pixKey?: string): string {
+export function getPaymentInstructionsPrompt(): string {
   return `Pagamento via PIX
 
 Valor:
@@ -426,8 +424,7 @@ export async function handleKaelUserMessage(
   session: KaelSession,
   userMessage: string,
   actionIdOrAiFn?: any,
-  explicitActionId?: string,
-  pixKey: string = DEFAULT_PIX_CODE
+  explicitActionId?: string
 ): Promise<{ updatedSession: KaelSession; newMessages: KaelMessage[] }> {
   const now = new Date().toISOString();
   const newMessages: KaelMessage[] = [];
@@ -526,7 +523,7 @@ export async function handleKaelUserMessage(
       }
 
       case 'PAY':
-        return transitionTo('AGUARDANDO_PAGAMENTO', getPaymentInstructionsPrompt(pixKey));
+        return transitionTo('AGUARDANDO_PAGAMENTO', getPaymentInstructionsPrompt());
 
       case 'BACK': {
         const curr = session.currentState;

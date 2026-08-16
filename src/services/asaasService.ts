@@ -72,10 +72,12 @@ export interface PaymentCreationResult {
   pixCode?: string;
   qrCodeImage?: string;
   value: number;
-  status: 'payment_pending' | 'paid' | 'generating' | 'completed' | 'failed';
+  status: 'payment_pending' | 'paid' | 'generating' | 'completed' | 'failed' | 'error';
   error?: string;
   isMockFallback?: boolean;
 }
+
+import crypto from 'crypto';
 
 export const OFFICIAL_PRICE = 14.90;
 
@@ -83,11 +85,11 @@ export const OFFICIAL_PRICE = 14.90;
  * Retorna a URL base do Asaas de acordo com o ambiente configurado
  */
 export function getAsaasBaseUrl(): string {
-  const env = (process.env.ASAAS_ENV || 'sandbox').trim().toLowerCase();
-  if (env === 'production' || env === 'prod') {
-    return 'https://api.asaas.com/v3';
+  const env = (process.env.ASAAS_ENV || 'production').trim().toLowerCase();
+  if (env === 'sandbox') {
+    return 'https://api-sandbox.asaas.com/v3';
   }
-  return 'https://api-sandbox.asaas.com/v3';
+  return 'https://api.asaas.com/v3';
 }
 
 /**
@@ -106,17 +108,29 @@ export function getAsaasWebhookToken(): string {
 
 /**
  * Valida a autenticidade do webhook do Asaas verificando o header 'asaas-access-token'
+ * de forma resistente a timing attacks
  */
 export function validateWebhookToken(headerToken: string | undefined): boolean {
   const configuredToken = getAsaasWebhookToken();
   if (!configuredToken) {
-    // Se o token não estiver configurado no ambiente, loga aviso e permite
+    console.warn('[SECURITY] ASAAS_WEBHOOK_TOKEN não configurada no ambiente. Webhook recebido sem verificação estrita.');
     return true;
   }
-  if (!headerToken) {
+  if (!headerToken || typeof headerToken !== 'string') {
     return false;
   }
-  return headerToken.trim() === configuredToken;
+  const cleanHeader = headerToken.trim();
+  if (cleanHeader.length !== configuredToken.length) {
+    return false;
+  }
+  try {
+    return crypto.timingSafeEqual(
+      Buffer.from(cleanHeader, 'utf-8'),
+      Buffer.from(configuredToken, 'utf-8')
+    );
+  } catch {
+    return false;
+  }
 }
 
 /**
@@ -252,19 +266,14 @@ export async function getPixQrCode(paymentId: string): Promise<AsaasPixQrCodeRes
 export async function createPixPayment(params: CreatePixPaymentParams): Promise<PaymentCreationResult> {
   const apiKey = getAsaasApiKey();
 
-  // Se a API Key do Asaas não estiver configurada no ambiente (ex: visualização inicial sem segredo),
-  // geramos uma resposta estruturada de fallback com dados claros para não quebrar a tela
+  // Se a API Key do Asaas não estiver configurada no ambiente, retorna erro seguro sem gerar PIX falso
   if (!apiKey) {
-    console.warn('[ASAAS] Variável ASAAS_API_KEY não configurada. Defina no .env ou Secrets.');
-    const fallbackPix = '00020101021126580014br.gov.bcb.pix01360efa1471-55ad-4ce9-9f7a-6cd5d173525c5204000053039865802BR5913JOSE P JUNIOR6009FORTALEZA62070503***6304F837';
+    console.error('[ASAAS] Variável ASAAS_API_KEY não configurada no ambiente.');
     return {
-      success: true,
-      paymentId: `mock-pay-${params.orderId}`,
-      customerId: `mock-cus-${Date.now()}`,
-      pixCode: fallbackPix,
+      success: false,
       value: OFFICIAL_PRICE,
-      status: 'payment_pending',
-      isMockFallback: true
+      status: 'error',
+      error: 'Serviço de pagamento Asaas indisponível. A chave de integração (ASAAS_API_KEY) não está configurada.'
     };
   }
 
