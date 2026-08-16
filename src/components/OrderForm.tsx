@@ -134,7 +134,7 @@ export const OrderForm: React.FC<OrderFormProps> = ({ onOrderCreated }) => {
               </>
             ) : (
               <>
-                <span>Continuar — R$15</span>
+                <span>Continuar — R$ 14,90</span>
                 <ArrowRight className="w-5 h-5 text-[#0d0b18]" />
               </>
             )}

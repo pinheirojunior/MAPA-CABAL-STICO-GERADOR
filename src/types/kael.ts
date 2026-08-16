@@ -31,7 +31,19 @@ export interface KaelMessage {
   options?: KaelOption[];
   pdfUrl?: string;
   pixCode?: string;
+  qrCodeImage?: string;
 }
+
+export type OrderPaymentStatus =
+  | 'pending'
+  | 'payment_pending'
+  | 'paid'
+  | 'generating'
+  | 'completed'
+  | 'failed'
+  | 'cancelled'
+  | 'pendente'
+  | 'pago';
 
 export interface KaelSession {
   sessionId: string;
@@ -41,11 +53,18 @@ export interface KaelSession {
   previousState?: KaelState;
   stateHistory?: KaelState[];
   messages: KaelMessage[];
-  paymentStatus: 'pendente' | 'pago';
+  paymentStatus: OrderPaymentStatus;
   orderId?: string;
   mapId?: string;
   pdfPath?: string;
   pdfUrl?: string;
+  asaasCustomerId?: string;
+  asaasPaymentId?: string;
+  paymentValue?: number;
+  paymentCreatedAt?: string;
+  paymentReceivedAt?: string;
+  pixCode?: string;
+  qrCodeImage?: string;
   messageCount: number;
   offTopicCount: number;
   lastInteractionAt: string;

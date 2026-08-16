@@ -32,13 +32,34 @@ export interface CabalisticMapData {
   };
 }
 
+export type OrderStatus =
+  | 'pending'
+  | 'payment_pending'
+  | 'paid'
+  | 'generating'
+  | 'completed'
+  | 'failed'
+  | 'cancelled'
+  | 'aguardando_pagamento'
+  | 'pago';
+
 export interface Order {
   id: string;
   name: string;
   birthDate: string;
   price: number;
-  status: 'aguardando_pagamento' | 'pago';
+  status: OrderStatus;
   createdAt: string;
+  asaasCustomerId?: string;
+  asaasPaymentId?: string;
+  paymentStatus?: OrderStatus;
+  paymentValue?: number;
+  paymentCreatedAt?: string;
+  paymentReceivedAt?: string;
+  pixCode?: string;
+  qrCodeImage?: string;
+  pdfUrl?: string;
+  pdfPath?: string;
   map?: CabalisticMapData | null;
 }
 

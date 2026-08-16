@@ -24,6 +24,7 @@ export function KaelChat({ onClose, onOpenPixAdmin }: KaelChatProps) {
   const [copied, setCopied] = useState<boolean>(false);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const pollingRef = useRef<any>(null);
 
   // Carrega ou inicializa a sessão do Kael ao montar
   useEffect(() => {
@@ -32,9 +33,14 @@ export function KaelChat({ onClose, onOpenPixAdmin }: KaelChatProps) {
     fetchPixConfig();
   }, [sessionId]);
 
-  // Gera o QR Code com alta resolução e nitidez
+  // Gera o QR Code com alta resolução e nitidez a partir da chave PIX do Asaas ou contingência
   useEffect(() => {
-    const code = pixKey || OFFICIAL_PIX_CODE;
+    if (session?.qrCodeImage) {
+      setQrCodeDataUrl(session.qrCodeImage);
+      return;
+    }
+
+    const code = session?.pixCode || pixKey || OFFICIAL_PIX_CODE;
     QRCode.toDataURL(code, {
       width: 400,
       margin: 2,
@@ -46,12 +52,56 @@ export function KaelChat({ onClose, onOpenPixAdmin }: KaelChatProps) {
     })
       .then(url => setQrCodeDataUrl(url))
       .catch(err => console.error('Erro ao gerar QR Code PIX:', err));
-  }, [pixKey]);
+  }, [pixKey, session?.pixCode, session?.qrCodeImage]);
 
   // Scroll automático para a última mensagem
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [session?.messages, isLoading, isGeneratingMap]);
+
+  // Polling em tempo real quando estiver aguardando pagamento
+  useEffect(() => {
+    if (session?.currentState !== 'AGUARDANDO_PAGAMENTO' || session?.paymentStatus === 'pago' || session?.paymentStatus === 'completed') {
+      if (pollingRef.current) {
+        clearInterval(pollingRef.current);
+        pollingRef.current = null;
+      }
+      return;
+    }
+
+    const checkPaymentStatus = async () => {
+      try {
+        const res = await fetch(`/api/kael/session/${sessionId}/status`);
+        if (!res.ok) return;
+        const data = await res.json();
+
+        if (data.paymentStatus === 'generating' || data.currentState === 'MAPA_EM_PROCESSAMENTO') {
+          setIsGeneratingMap(true);
+        }
+
+        if (data.paymentStatus === 'completed' || data.paymentStatus === 'pago' || data.pdfAvailable) {
+          setIsGeneratingMap(false);
+          // Recarrega a sessão para obter as mensagens MSG_6 e MSG_7 com o link do PDF
+          loadSession(sessionId);
+          if (pollingRef.current) {
+            clearInterval(pollingRef.current);
+            pollingRef.current = null;
+          }
+        }
+      } catch (err) {
+        // Ignora erros temporários no polling
+      }
+    };
+
+    pollingRef.current = setInterval(checkPaymentStatus, 3000);
+
+    return () => {
+      if (pollingRef.current) {
+        clearInterval(pollingRef.current);
+        pollingRef.current = null;
+      }
+    };
+  }, [session?.currentState, session?.paymentStatus, sessionId]);
 
   const fetchPixConfig = async () => {
     try {
@@ -77,6 +127,9 @@ export function KaelChat({ onClose, onOpenPixAdmin }: KaelChatProps) {
       const data = await res.json();
       if (res.ok && data.success) {
         setSession(data.session);
+        if (data.session?.pixCode) {
+          setPixKey(data.session.pixCode);
+        }
       } else {
         setError(data.error || 'Erro ao carregar sessão com o Kael.');
       }
@@ -197,7 +250,7 @@ export function KaelChat({ onClose, onOpenPixAdmin }: KaelChatProps) {
   };
 
   const handleCopyPixKey = (keyToCopy: string) => {
-    const targetCode = keyToCopy || OFFICIAL_PIX_CODE;
+    const targetCode = keyToCopy || session?.pixCode || pixKey || OFFICIAL_PIX_CODE;
     navigator.clipboard.writeText(targetCode);
     setCopied(true);
     setTimeout(() => setCopied(false), 3500);
@@ -256,6 +309,7 @@ export function KaelChat({ onClose, onOpenPixAdmin }: KaelChatProps) {
   };
 
   const badge = getStateBadge(session?.currentState);
+  const activePixCode = session?.pixCode || pixKey || OFFICIAL_PIX_CODE;
 
   return (
     <div className="max-w-4xl mx-auto my-6 px-3 sm:px-6">
@@ -290,7 +344,7 @@ export function KaelChat({ onClose, onOpenPixAdmin }: KaelChatProps) {
             <button
               onClick={onOpenPixAdmin}
               title="Configurar Chave PIX"
-              className="p-2 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-300 hover:text-amber-200 transition-colors text-xs flex items-center gap-1.5"
+              className="p-2 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-300 hover:text-amber-200 transition-colors text-xs flex items-center gap-1.5 cursor-pointer"
             >
               <Settings className="w-3.5 h-3.5" />
               <span>Chave PIX</span>
@@ -300,7 +354,7 @@ export function KaelChat({ onClose, onOpenPixAdmin }: KaelChatProps) {
             id="btn-reset-kael-chat"
             onClick={handleResetSession}
             title="Reiniciar Sessão do Kael"
-            className="p-2 rounded-xl bg-slate-800/80 hover:bg-slate-700 border border-slate-700 text-slate-300 hover:text-amber-300 transition-colors text-xs flex items-center gap-1.5"
+            className="p-2 rounded-xl bg-slate-800/80 hover:bg-slate-700 border border-slate-700 text-slate-300 hover:text-amber-300 transition-colors text-xs flex items-center gap-1.5 cursor-pointer"
           >
             <RefreshCw className="w-3.5 h-3.5" />
             <span>Reiniciar Chat</span>
@@ -324,23 +378,30 @@ export function KaelChat({ onClose, onOpenPixAdmin }: KaelChatProps) {
         </div>
         <div className="flex flex-col justify-center">
           {session?.currentState === 'AGUARDANDO_PAGAMENTO' && (
-            <button
-              onClick={handleSimulatePayment}
-              disabled={isGeneratingMap}
-              className="w-full py-2 px-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-semibold rounded-lg shadow-md shadow-emerald-900/30 transition-all flex items-center justify-center gap-1.5 text-xs border border-emerald-400/30 disabled:opacity-50"
-            >
-              {isGeneratingMap ? (
-                <>
-                  <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-                  <span>Gerando Mapa & PDF...</span>
-                </>
-              ) : (
-                <>
-                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-200" />
-                  <span>Simular Confirmação do PIX (R$ 14,90)</span>
-                </>
-              )}
-            </button>
+            <div className="flex flex-col gap-1.5">
+              <div className="flex items-center gap-1 text-[11px] text-blue-300 font-semibold">
+                <RefreshCw className="w-3 h-3 animate-spin text-blue-400" />
+                <span>Aguardando confirmação PIX em tempo real...</span>
+              </div>
+              <button
+                onClick={handleSimulatePayment}
+                disabled={isGeneratingMap}
+                className="w-full py-1.5 px-2 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-emerald-300 font-medium rounded-lg border border-slate-700 transition-all flex items-center justify-center gap-1 text-[11px] cursor-pointer"
+                title="Para testes rápidos no ambiente de desenvolvimento"
+              >
+                {isGeneratingMap ? (
+                  <>
+                    <RefreshCw className="w-3 h-3 animate-spin" />
+                    <span>Gerando Mapa & PDF...</span>
+                  </>
+                ) : (
+                  <>
+                    <CheckCircle2 className="w-3 h-3 text-emerald-400" />
+                    <span>Simular aprovação (Dev)</span>
+                  </>
+                )}
+              </button>
+            </div>
           )}
 
           {session?.paymentStatus === 'pago' && session.pdfUrl && (
@@ -348,7 +409,7 @@ export function KaelChat({ onClose, onOpenPixAdmin }: KaelChatProps) {
               href={session.pdfUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full py-2 px-3 bg-gradient-to-r from-amber-500 to-yellow-500 text-slate-950 font-bold rounded-lg shadow-md hover:brightness-110 transition-all flex items-center justify-center gap-1.5 text-xs"
+              className="w-full py-2 px-3 bg-gradient-to-r from-amber-500 to-yellow-500 text-slate-950 font-bold rounded-lg shadow-md hover:brightness-110 transition-all flex items-center justify-center gap-1.5 text-xs cursor-pointer"
             >
               <FileDown className="w-4 h-4" />
               <span>Baixar Mapa PDF Completo</span>
@@ -357,7 +418,7 @@ export function KaelChat({ onClose, onOpenPixAdmin }: KaelChatProps) {
 
           {session?.currentState !== 'AGUARDANDO_PAGAMENTO' && session?.paymentStatus !== 'pago' && (
             <span className="text-slate-400 text-[11px]">
-              Preço Promocional: <strong className="text-amber-400">R$ 14,90</strong>
+              Preço Promocional: <strong className="text-amber-400 font-mono">R$ 14,90</strong>
             </span>
           )}
         </div>
@@ -463,7 +524,7 @@ export function KaelChat({ onClose, onOpenPixAdmin }: KaelChatProps) {
 
                       {/* 5. Botão Copiar PIX */}
                       <button
-                        onClick={() => handleCopyPixKey(pixKey || OFFICIAL_PIX_CODE)}
+                        onClick={() => handleCopyPixKey(activePixCode)}
                         className={`w-full py-2.5 px-4 rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all shadow-md active:scale-95 cursor-pointer ${
                           copied
                             ? 'bg-emerald-600 hover:bg-emerald-500 text-white border border-emerald-400'
@@ -506,7 +567,7 @@ export function KaelChat({ onClose, onOpenPixAdmin }: KaelChatProps) {
                           href={msg.pdfUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-amber-500 to-yellow-400 text-slate-950 font-bold rounded-xl shadow-lg hover:brightness-110 transition-all text-xs"
+                          className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-amber-500 to-yellow-400 text-slate-950 font-bold rounded-xl shadow-lg hover:brightness-110 transition-all text-xs cursor-pointer"
                         >
                           <FileDown className="w-4 h-4" />
                           <span>Baixar Seu Mapa em PDF</span>
@@ -576,7 +637,7 @@ export function KaelChat({ onClose, onOpenPixAdmin }: KaelChatProps) {
             <button
               type="submit"
               disabled={!inputMessage.trim() || isLoading || isGeneratingMap}
-              className="p-2.5 bg-gradient-to-r from-amber-500 to-yellow-500 text-slate-950 rounded-xl hover:brightness-110 active:scale-95 transition-all shadow-md disabled:opacity-40 disabled:pointer-events-none"
+              className="p-2.5 bg-gradient-to-r from-amber-500 to-yellow-500 text-slate-950 rounded-xl hover:brightness-110 active:scale-95 transition-all shadow-md disabled:opacity-40 disabled:pointer-events-none cursor-pointer"
               title="Enviar mensagem"
             >
               <Send className="w-4 h-4" />

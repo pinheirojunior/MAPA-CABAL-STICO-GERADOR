@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Copy, Check, QrCode, AlertTriangle, Loader2, Sparkles, ShieldCheck } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Copy, Check, QrCode, AlertTriangle, Loader2, Sparkles, ShieldCheck, RefreshCw } from 'lucide-react';
 import QRCode from 'qrcode';
 import { Order } from '../types';
 
@@ -20,19 +20,60 @@ export const PixPaymentModal: React.FC<PixPaymentModalProps> = ({
   const [loadingPayment, setLoadingPayment] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [qrCodeDataUrl, setQrCodeDataUrl] = useState<string>('');
+  const [isWaitingWebhook, setIsWaitingWebhook] = useState(true);
+  const pollingRef = useRef<any>(null);
 
-  const pixKey = OFFICIAL_PIX_CODE;
+  const pixKey = order.pixCode || OFFICIAL_PIX_CODE;
 
+  // Renderiza QR Code nítido e de alta qualidade
   useEffect(() => {
-    QRCode.toDataURL(pixKey, {
-      width: 320,
-      margin: 2,
-      errorCorrectionLevel: 'M',
-      color: { dark: '#000000', light: '#ffffff' }
-    })
-      .then(url => setQrCodeDataUrl(url))
-      .catch(err => console.error('Erro gerando QR Code:', err));
-  }, [pixKey]);
+    if (order.qrCodeImage) {
+      setQrCodeDataUrl(order.qrCodeImage);
+    } else {
+      QRCode.toDataURL(pixKey, {
+        width: 380,
+        margin: 2,
+        errorCorrectionLevel: 'M',
+        color: { dark: '#000000', light: '#ffffff' }
+      })
+        .then(url => setQrCodeDataUrl(url))
+        .catch(err => console.error('Erro gerando QR Code:', err));
+    }
+  }, [pixKey, order.qrCodeImage]);
+
+  // Polling automático para detecção em tempo real do Webhook do Asaas
+  useEffect(() => {
+    let isSubscribed = true;
+
+    const checkOrderStatus = async () => {
+      try {
+        const response = await fetch(`/api/orders/${order.id}/status`);
+        if (!response.ok) return;
+
+        const data = await response.json();
+        if (data && (data.paymentStatus === 'completed' || data.paymentStatus === 'paid' || data.pdfAvailable)) {
+          if (isSubscribed) {
+            // Busca o pedido completo atualizado
+            const orderRes = await fetch(`/api/orders/${order.id}`);
+            if (orderRes.ok) {
+              const fullOrder = await orderRes.json();
+              clearInterval(pollingRef.current);
+              onPaymentApproved(fullOrder);
+            }
+          }
+        }
+      } catch (err) {
+        // Ignora erros temporários no polling
+      }
+    };
+
+    pollingRef.current = setInterval(checkOrderStatus, 3000);
+
+    return () => {
+      isSubscribed = false;
+      if (pollingRef.current) clearInterval(pollingRef.current);
+    };
+  }, [order.id, onPaymentApproved]);
 
   const handleCopyPix = () => {
     navigator.clipboard.writeText(pixKey);
@@ -96,7 +137,7 @@ export const PixPaymentModal: React.FC<PixPaymentModalProps> = ({
           </div>
           <button
             onClick={onBack}
-            className="text-purple-400 hover:text-purple-300 underline text-[11px]"
+            className="text-purple-400 hover:text-purple-300 underline text-[11px] cursor-pointer"
           >
             Editar dados
           </button>
@@ -119,7 +160,7 @@ export const PixPaymentModal: React.FC<PixPaymentModalProps> = ({
             <img
               src={qrCodeDataUrl}
               alt="QR Code PIX R$ 14,90"
-              className="w-40 h-40 object-contain rounded-lg"
+              className="w-40 h-40 object-contain rounded-lg select-none"
             />
           ) : (
             <QrCode className="w-28 h-28 text-slate-900 animate-pulse" />
@@ -157,6 +198,12 @@ export const PixPaymentModal: React.FC<PixPaymentModalProps> = ({
           </div>
         </div>
 
+        {/* Status de Aguardo do Webhook */}
+        <div className="mb-5 p-3 rounded-xl bg-blue-950/40 border border-blue-500/30 text-blue-200 text-xs flex items-center justify-center gap-2 text-center">
+          <RefreshCw className="w-3.5 h-3.5 animate-spin text-blue-400 shrink-0" />
+          <span>Aguardando confirmação bancária em tempo real... O PDF será liberado automaticamente.</span>
+        </div>
+
         {error && (
           <div className="bg-rose-950/80 border border-rose-600/50 text-rose-200 text-xs p-3 rounded-xl mb-5">
             {error}
@@ -169,10 +216,10 @@ export const PixPaymentModal: React.FC<PixPaymentModalProps> = ({
             <AlertTriangle className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
             <div>
               <h4 className="text-xs font-bold text-amber-300 uppercase tracking-wide">
-                Ambiente de Desenvolvimento / MVP
+                Ambiente de Testes / Simulação
               </h4>
               <p className="text-[11px] text-slate-300 leading-normal mt-0.5">
-                Clique no botão abaixo para simular o pagamento aprovado. O sistema gerará o seu Mapa Cabalístico e o arquivo PDF instantaneamente.
+                Para testes manuais sem envio de webhook externo, clique no botão abaixo para simular a aprovação instantânea.
               </p>
             </div>
           </div>
@@ -199,7 +246,7 @@ export const PixPaymentModal: React.FC<PixPaymentModalProps> = ({
 
         <div className="text-center text-[10px] text-slate-400 flex items-center justify-center gap-1 pt-1">
           <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
-          <span>Após a simulação, o PDF ficará disponível imediatamente para download.</span>
+          <span>Após a confirmação, o PDF fica disponível imediatamente para download.</span>
         </div>
 
       </div>
